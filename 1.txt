@@ -1,13 +1,12 @@
 local Configs_HUB = {
-  Cor_Hub = Color3.fromRGB(8, 8, 8),         -- ⬛ أسود داكن جداً (خلفية النافذة)
-  Cor_Options = Color3.fromRGB(18, 18, 18),  -- ⬛ أسود داكن (خلفية الأزرار)
-  Cor_Stroke = Color3.fromRGB(255, 40, 40),  -- 🔴 أحمر متوهج قوي (حدود)
-  Cor_Text = Color3.fromRGB(255, 220, 220),  -- ⚪ أبيض دافئ مائل للأحمر (نص رئيسي)
-  Cor_DarkText = Color3.fromRGB(200, 120, 120), -- 🔴 أحمر فاتح (نصوص ثانوية)
-  Corner_Radius = UDim.new(0, 5),            -- 🔄 زوايا مستديرة أكثر
-  Text_Font = Enum.Font.FredokaOne           -- ✍️ نفس الخط
+  Cor_Hub = Color3.fromRGB(8, 8, 8), 
+  Cor_Options = Color3.fromRGB(18, 18, 18),
+  Cor_Stroke = Color3.fromRGB(255, 40, 40),
+  Cor_Text = Color3.fromRGB(255, 220, 220),
+  Cor_DarkText = Color3.fromRGB(200, 120, 120),
+  Corner_Radius = UDim.new(0, 5),
+  Text_Font = Enum.Font.FredokaOne
 }
-
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -1625,4 +1624,5 @@ function MakeWindow(Configs)
     end)
   end
   return Menu
+
 end
