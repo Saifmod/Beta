@@ -822,16 +822,14 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     return SliderFrame
 end
 
-function Components:CreateParagraph(Text, Alignment, BGColor, TextColor)
+function Components:CreateParagraph(Text, Alignment)
     Text = Text or "النص هنا"
     Alignment = Alignment or "Left"
-    BGColor = BGColor or Color3.fromRGB(35, 35, 35)
-    TextColor = TextColor or Color3.fromRGB(255, 255, 255)
 
     local ParagraphFrame = Instance.new("Frame")
-    ParagraphFrame.BackgroundColor3 = BGColor
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(200, 50, 50) 
     ParagraphFrame.BorderSizePixel = 0
-    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) 
+    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80)
     ParagraphFrame.Parent = Display
     ParagraphFrame.ClipsDescendants = true
 
@@ -846,7 +844,7 @@ function Components:CreateParagraph(Text, Alignment, BGColor, TextColor)
     TextLabel.Size = UDim2.new(1, -20, 1, -20)
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = Text
-    TextLabel.TextColor3 = TextColor
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     TextLabel.TextSize = 18
     TextLabel.TextWrapped = true
 
