@@ -831,60 +831,32 @@ function Components:CreateParagraph(Text, Alignment, BGColor, TextColor)
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.BackgroundColor3 = BGColor
     ParagraphFrame.BorderSizePixel = 0
-    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80)
+    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) 
     ParagraphFrame.Parent = Display
     ParagraphFrame.ClipsDescendants = true
 
-    -- زوايا مستديرة أكثر
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 15)
+    Corner.CornerRadius = UDim.new(0, 10)
     Corner.Parent = ParagraphFrame
 
-    -- تأثير ظل خفيف للنص
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Parent = ParagraphFrame
     TextLabel.BackgroundTransparency = 1
-    TextLabel.Size = UDim2.new(1, -20, 1, -20)
     TextLabel.Position = UDim2.new(0, 10, 0, 10)
+    TextLabel.Size = UDim2.new(1, -20, 1, -20)
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = Text
     TextLabel.TextColor3 = TextColor
     TextLabel.TextSize = 18
     TextLabel.TextWrapped = true
 
-    -- Shadow
-    local Shadow = Instance.new("TextLabel")
-    Shadow.Parent = ParagraphFrame
-    Shadow.BackgroundTransparency = 1
-    Shadow.Size = TextLabel.Size
-    Shadow.Position = TextLabel.Position + UDim2.new(0,2,0,2)
-    Shadow.Font = TextLabel.Font
-    Shadow.Text = Text
-    Shadow.TextColor3 = Color3.fromRGB(0,0,0)
-    Shadow.TextSize = TextLabel.TextSize
-    Shadow.TextTransparency = 0.5
-    Shadow.TextWrapped = true
-
-    -- محاذاة النص
     if Alignment:lower() == "center" then
         TextLabel.TextXAlignment = Enum.TextXAlignment.Center
-        Shadow.TextXAlignment = Enum.TextXAlignment.Center
     elseif Alignment:lower() == "right" then
         TextLabel.TextXAlignment = Enum.TextXAlignment.Right
-        Shadow.TextXAlignment = Enum.TextXAlignment.Right
     else
         TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-        Shadow.TextXAlignment = Enum.TextXAlignment.Left
     end
-
-    -- تأثير عند المرور (تكبر شوية لما تمر الماوس)
-    local uis = game:GetService("UserInputService")
-    ParagraphFrame.MouseEnter:Connect(function()
-        game:GetService("TweenService"):Create(ParagraphFrame, TweenInfo.new(0.2), {Size = ParagraphFrame.Size + UDim2.new(0,10,0,10)}):Play()
-    end)
-    ParagraphFrame.MouseLeave:Connect(function()
-        game:GetService("TweenService"):Create(ParagraphFrame, TweenInfo.new(0.2), {Size = ParagraphFrame.Size - UDim2.new(0,10,0,10)}):Play()
-    end)
 
     return ParagraphFrame
 end
