@@ -822,7 +822,7 @@ function Components:CreateParagraph(ParagraphText)
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.Name = "ParagraphFrame"
     ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) 
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(252, 48, 3)
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     ParagraphFrame.BorderSizePixel = 0
     ParagraphFrame.Parent = Display
 
