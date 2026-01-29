@@ -500,43 +500,45 @@ function Components:CreateDropdown(DropdownName,List,Callback)
     List = List or {}
     Callback = Callback or function() end
     local DropdownOn = false
+
     local Dropdown = Instance.new("Frame")
     local DropdownTitle = Instance.new("TextLabel")
     local DropButton = Instance.new("ImageButton")
     local DropdownContainer = Instance.new("Frame")
     local ListLayout = Instance.new("UIListLayout")
+    local Corner = Instance.new("UICorner") -- أنيميشن الحواف
 
     Dropdown.Name = DropdownName
     Dropdown.Parent = Display
     Dropdown.BackgroundColor3 = Color3.fromRGB(6, 6, 6)
     Dropdown.BorderSizePixel = 0
-    Dropdown.Position = UDim2.new(0.0238095243, 0, 0.232209742, 0)
+    Dropdown.Position = UDim2.new(0.0238, 0, 0.232, 0)
     Dropdown.Size = UDim2.new(0, 300, 0, 30)
+
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Dropdown
 
     DropdownTitle.Name = DropdownName
     DropdownTitle.Parent = Dropdown
-    DropdownTitle.BackgroundColor3 = Color3.fromRGB(6, 6, 6)
-    DropdownTitle.BorderColor3 = Color3.fromRGB(27, 42, 53)
-    DropdownTitle.BorderSizePixel = 0
+    DropdownTitle.BackgroundTransparency = 1
     DropdownTitle.Size = UDim2.new(0, 300, 0, 30)
     DropdownTitle.Font = Enum.Font.SourceSansBold
     DropdownTitle.Text = DropdownName
     DropdownTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    DropdownTitle.TextSize = 24.000
+    DropdownTitle.TextSize = 24
     DropdownTitle.TextXAlignment = Enum.TextXAlignment.Left
-
 
     DropdownContainer.Name = "DropdownContainer"
     DropdownContainer.Parent = DropdownTitle
     DropdownContainer.Active = true
     DropdownContainer.BackgroundColor3 = Color3.fromRGB(6, 6, 6)
-    DropdownContainer.BackgroundTransparency = 1.000
+    DropdownContainer.BackgroundTransparency = 1
     DropdownContainer.BorderSizePixel = 0
     DropdownContainer.ClipsDescendants = true
     DropdownContainer.Position = UDim2.new(0, 0, 1, 0)
     DropdownContainer.Size = UDim2.new(0, 300, 0, 0)
     DropdownContainer.Visible = false
-    
+
     ListLayout.Name = "ListLayout"
     ListLayout.Parent = DropdownContainer
     ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -544,47 +546,53 @@ function Components:CreateDropdown(DropdownName,List,Callback)
 
     DropButton.Name = "DropButton"
     DropButton.Parent = DropdownTitle
-    DropButton.BackgroundTransparency = 1.000
-    DropButton.Position = UDim2.new(0.909999967, 0, 0.0666666627, 0)
+    DropButton.BackgroundTransparency = 1
+    DropButton.Position = UDim2.new(0.91, 0, 0.067, 0)
     DropButton.Size = UDim2.new(0, 25, 0, 25)
     DropButton.SizeConstraint = Enum.SizeConstraint.RelativeYY
-    DropButton.ZIndex = 2
     DropButton.Image = "rbxassetid://3926307971"
     DropButton.ImageRectOffset = Vector2.new(324, 364)
     DropButton.ImageRectSize = Vector2.new(36, 36)
     DropButton.ScaleType = Enum.ScaleType.Fit
 
-DropButton.MouseButton1Click:Connect(function ()
-    DropdownOn = not DropdownOn
-    if DropdownOn == true  then 
-        DropdownContainer.Visible = true
-        game:GetService("TweenService"):Create(DropdownContainer,TweenInfo.new(0.4),{Size = UDim2.new(0,300,0,ListLayout.AbsoluteContentSize.Y + 39)}):Play()
-        game:GetService("TweenService"):Create(Dropdown,TweenInfo.new(0.4),{Size = UDim2.new(0,300,0,ListLayout.AbsoluteContentSize.Y + 39)}):Play()
-    elseif DropdownOn == false  then
-        game:GetService("TweenService"):Create(Dropdown,TweenInfo.new(0.4),{Size = UDim2.new(0,300,0,30)}):Play()
-        game:GetService("TweenService"):Create(DropdownContainer,TweenInfo.new(0.4),{Size = UDim2.new(0,300,0,0)}):Play()
+    DropButton.MouseButton1Click:Connect(function ()
+        DropdownOn = not DropdownOn
+        if DropdownOn then
+            DropdownContainer.Visible = true
+            -- أنيميشن التوسيع
+            game:GetService("TweenService"):Create(DropdownContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0,300,0,ListLayout.AbsoluteContentSize.Y + 39)}):Play()
+            game:GetService("TweenService"):Create(Dropdown, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0,300,0,ListLayout.AbsoluteContentSize.Y + 39)}):Play()
+            -- حواف تتوسع تدريجياً
+            game:GetService("TweenService"):Create(Corner, TweenInfo.new(0.4), {CornerRadius = UDim.new(0,12)}):Play()
+        else
+            game:GetService("TweenService"):Create(Dropdown, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0,300,0,30)}):Play()
+            game:GetService("TweenService"):Create(DropdownContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0,300,0,0)}):Play()
+            -- حواف ترجع للوضع الأصلي
+            game:GetService("TweenService"):Create(Corner, TweenInfo.new(0.4), {CornerRadius = UDim.new(0,8)}):Play()
+        end
+    end)
+
+    for i, vv in pairs(List) do
+        local ItemButton = Instance.new("TextButton")
+        ItemButton.Name = "ItemButton"
+        ItemButton.Parent = DropdownContainer
+        ItemButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        ItemButton.BorderSizePixel = 0
+        ItemButton.Size = UDim2.new(0, 300, 0, 28)
+        ItemButton.Font = Enum.Font.SourceSansBold
+        ItemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        ItemButton.TextSize = 19
+        ItemButton.Text = vv
+
+        local ItemCorner = Instance.new("UICorner")
+        ItemCorner.CornerRadius = UDim.new(0,6)
+        ItemCorner.Parent = ItemButton
+
+        ItemButton.MouseButton1Click:Connect(function()
+            pcall(Callback,vv)
+            DropdownTitle.Text = DropdownName .. ": ".. vv
+        end)
     end
-end)
-
-
-for i , vv in pairs(List) do
-    local ItemButton = Instance.new("TextButton")
-    ItemButton.Name = "ItemButton"
-    ItemButton.Parent = DropdownContainer
-    ItemButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    ItemButton.BorderSizePixel = 0
-    ItemButton.Size = UDim2.new(0, 300, 0, 28)
-    ItemButton.Font = Enum.Font.SourceSansBold
-    ItemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ItemButton.TextSize = 19.000
-ItemButton.Text = vv
-ItemButton.MouseButton1Click:Connect(function()
-    debounce = true
-    pcall(Callback,vv)
-    DropdownTitle.Text = DropdownName .. ": ".. vv
-end)
-end
-
 end
 
 function Components:CreateToggle(ToggleName, Callback)
