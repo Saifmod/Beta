@@ -742,7 +742,7 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     local ValueBox = Instance.new("TextLabel")
     ValueBox.Parent = SliderFrame
     ValueBox.Size = UDim2.new(0, 50, 0, 20)
-    ValueBox.Position = UDim2.new(0.5, -25, 0.4, 20) -- رفع الرقم شوي فوق
+    ValueBox.Position = UDim2.new(0.5, -25, 0, 25) -- رفع المربع شوي
     ValueBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     ValueBox.BorderSizePixel = 0
     ValueBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -781,9 +781,10 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
 
     local function updateSlider(inputPos)
         local relativePos = math.clamp(inputPos.X - SliderBar.AbsolutePosition.X, 0, SliderBar.AbsoluteSize.X)
-        local value = math.floor((relativePos / SliderBar.AbsoluteSize.X) * (maxValue - minValue) + minValue)
-        SliderFill.Size = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, 0, 1, 0)
-        SliderButton.Position = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, -7, 0.5, -7)
+        local percent = relativePos / SliderBar.AbsoluteSize.X
+        local value = math.floor(percent * (maxValue - minValue) + minValue)
+        SliderFill.Size = UDim2.new(percent, 0, 1, 0)
+        SliderButton.Position = UDim2.new(percent, -7, 0.5, -7)
         ValueBox.Text = tostring(value)
         pcall(Callback, value)
     end
@@ -803,6 +804,19 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     UserInputService.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             updateSlider(input.Position)
+        end
+    end)
+
+    -- حتى لو ضغطت مباشرة على الـBar يتحرك السلايدر
+    SliderBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            updateSlider(input.Position)
+        end
+    end)
+    SliderBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
         end
     end)
 
