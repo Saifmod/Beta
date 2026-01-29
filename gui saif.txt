@@ -822,39 +822,33 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     return SliderFrame
 end
 
-function Components:CreateParagraph(Text, Alignment)
-    Text = Text or "النص هنا"
-    Alignment = Alignment or "Left"
+function Components:CreateParagraph(ParagraphText)
+    ParagraphText = ParagraphText or "هنا نص الفقرة"
 
+    -- المربع الأسود
     local ParagraphFrame = Instance.new("Frame")
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(200, 50, 50) 
+    ParagraphFrame.Name = "ParagraphFrame"
+    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) -- حجم افتراضي
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(200, 50, 50) -- نفس لون Toggle
     ParagraphFrame.BorderSizePixel = 0
-    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80)
     ParagraphFrame.Parent = Display
-    ParagraphFrame.ClipsDescendants = true
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 10)
     Corner.Parent = ParagraphFrame
 
+    -- النص داخل المربع
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Parent = ParagraphFrame
-    TextLabel.BackgroundTransparency = 1
+    TextLabel.Size = UDim2.new(1, -20, 1, -20) -- تباعد داخلي
     TextLabel.Position = UDim2.new(0, 10, 0, 10)
-    TextLabel.Size = UDim2.new(1, -20, 1, -20)
-    TextLabel.Font = Enum.Font.GothamBold
-    TextLabel.Text = Text
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = ParagraphText
+    TextLabel.Font = Enum.Font.GothamBold -- خط حلو يشبه بقية المكونات
     TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     TextLabel.TextSize = 18
     TextLabel.TextWrapped = true
-
-    if Alignment:lower() == "center" then
-        TextLabel.TextXAlignment = Enum.TextXAlignment.Center
-    elseif Alignment:lower() == "right" then
-        TextLabel.TextXAlignment = Enum.TextXAlignment.Right
-    else
-        TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-    end
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
     return ParagraphFrame
 end
