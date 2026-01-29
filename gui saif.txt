@@ -755,7 +755,7 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
 
     local SliderBar = Instance.new("Frame")
     SliderBar.Parent = SliderFrame
-    SliderBar.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- خط رمادي
+    SliderBar.BackgroundColor3 = Color3.fromRGB(100, 100, 100) 
     SliderBar.BorderSizePixel = 0
     SliderBar.Position = UDim2.new(0.05, 0, 0.75, 0)
     SliderBar.Size = UDim2.new(0.9, 0, 0, 4)
@@ -822,7 +822,7 @@ function Components:CreateParagraph(ParagraphText)
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.Name = "ParagraphFrame"
     ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) 
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25) 
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(252, 48, 3)
     ParagraphFrame.BorderSizePixel = 0
     ParagraphFrame.Parent = Display
 
