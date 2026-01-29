@@ -885,6 +885,58 @@ function Components:CreateSection(SectionName, Alignment)
     return SectionFrame
 end
 
+function Components:CreateTag(TagInfo)
+    TagInfo = TagInfo or {}
+    local Title = TagInfo.Title or "Tag"
+    local Icon = TagInfo.Icon or nil -- مثال: "github"
+    local Color = TagInfo.Color or Color3.fromRGB(0,255,0)
+    local Radius = TagInfo.Radius or 0
+
+    local TagFrame = Instance.new("Frame")
+    TagFrame.Size = UDim2.new(0, 120, 0, 30)
+    TagFrame.BackgroundColor3 = Color
+    TagFrame.BorderSizePixel = 0
+    TagFrame.Parent = Display
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, Radius)
+    Corner.Parent = TagFrame
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = TagFrame
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Size = UDim2.new(1, -30, 1, 0)
+    TextLabel.Position = UDim2.new(0, 5, 0, 0)
+    TextLabel.Text = Title
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.TextColor3 = Color3.fromRGB(255,255,255)
+    TextLabel.TextSize = 18
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    if Icon then
+        local IconImg = Instance.new("ImageLabel")
+        IconImg.Parent = TagFrame
+        IconImg.BackgroundTransparency = 1
+        IconImg.Size = UDim2.new(0, 20, 0, 20)
+        IconImg.Position = UDim2.new(1, -25, 0.5, -10)
+        -- هنا تحط أي أيقونة حسب ID
+        if Icon == "github" then
+            IconImg.Image = "rbxassetid://6764432408" -- مثال أيقونة Github
+        end
+        IconImg.ScaleType = Enum.ScaleType.Fit
+    end
+
+    -- Animation بسيط عند الماوس
+    TagFrame.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(Corner,TweenInfo.new(0.3, Enum.EasingStyle.Quad), {CornerRadius = UDim.new(0, 13)}):Play()
+    end)
+    TagFrame.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(Corner,TweenInfo.new(0.3, Enum.EasingStyle.Quad), {CornerRadius = UDim.new(0, Radius)}):Play()
+    end)
+
+    return TagFrame
+end
+
 return Components
     end
     return InsideUi
