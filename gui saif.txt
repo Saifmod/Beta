@@ -680,7 +680,7 @@ function Components:CreateTextbox(TextboxName, Placeholder, Callback)
     TextLabel.Parent = TextboxFrame
     TextLabel.BackgroundTransparency = 1
     TextLabel.Size = UDim2.new(0.35, 0, 1, 0)
-    TextLabel.Position = UDim2.new(0, 10, 0, 0) -- تم تعديل الموضع بعد إزالة السهم
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = TextboxName
     TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -728,7 +728,6 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     FrameCorner.CornerRadius = UDim.new(0, 10)
     FrameCorner.Parent = SliderFrame
 
-    -- اسم السلايدر
     local NameLabel = Instance.new("TextLabel")
     NameLabel.Parent = SliderFrame
     NameLabel.Size = UDim2.new(1, 0, 0, 20)
@@ -740,7 +739,6 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     NameLabel.TextSize = 18
     NameLabel.TextXAlignment = Enum.TextXAlignment.Center
 
-    -- مربع القيمة
     local ValueBox = Instance.new("TextLabel")
     ValueBox.Parent = SliderFrame
     ValueBox.Size = UDim2.new(0, 50, 0, 20)
@@ -755,7 +753,6 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     ValueCorner.CornerRadius = UDim.new(0, 5)
     ValueCorner.Parent = ValueBox
 
-    -- خط السلايدر
     local SliderBar = Instance.new("Frame")
     SliderBar.Parent = SliderFrame
     SliderBar.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- خط رمادي
@@ -766,7 +763,6 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     BarCorner.CornerRadius = UDim.new(1, 0)
     BarCorner.Parent = SliderBar
 
-    -- تعبئة السلايدر
     local SliderFill = Instance.new("Frame")
     SliderFill.Parent = SliderBar
     SliderFill.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
@@ -776,7 +772,6 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     FillCorner.CornerRadius = UDim.new(1, 0)
     FillCorner.Parent = SliderFill
 
-    -- الدائرة المتحركة
     local SliderButton = Instance.new("Frame")
     SliderButton.Parent = SliderBar
     SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -793,10 +788,9 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     local function updateSlider(inputPos)
         local relativePos = math.clamp(inputPos.X - SliderBar.AbsolutePosition.X, 0, SliderBar.AbsoluteSize.X)
         local value = math.floor((relativePos / SliderBar.AbsoluteSize.X) * (maxValue - minValue) + minValue)
-        -- تحريك الدائرة والسلايدر الملون
+
         SliderFill.Size = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, 0, 1, 0)
         SliderButton.Position = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, -10, 0.5, -10)
-        -- تحديث مربع القيمة
         ValueBox.Text = tostring(value)
         pcall(Callback, value)
     end
@@ -825,11 +819,10 @@ end
 function Components:CreateParagraph(ParagraphText)
     ParagraphText = ParagraphText or "هنا نص الفقرة"
 
-    -- المربع الأسود
     local ParagraphFrame = Instance.new("Frame")
     ParagraphFrame.Name = "ParagraphFrame"
-    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) -- حجم افتراضي
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(200, 50, 50) -- نفس لون Toggle
+    ParagraphFrame.Size = UDim2.new(0, 301, 0, 80) 
+    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25) 
     ParagraphFrame.BorderSizePixel = 0
     ParagraphFrame.Parent = Display
 
@@ -837,18 +830,18 @@ function Components:CreateParagraph(ParagraphText)
     Corner.CornerRadius = UDim.new(0, 10)
     Corner.Parent = ParagraphFrame
 
-    -- النص داخل المربع
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Parent = ParagraphFrame
-    TextLabel.Size = UDim2.new(1, -20, 1, -20) -- تباعد داخلي
-    TextLabel.Position = UDim2.new(0, 10, 0, 10)
+    TextLabel.Size = UDim2.new(1, -10, 1, -10)
+    TextLabel.Position = UDim2.new(0, 5, 0, 5)
     TextLabel.BackgroundTransparency = 1
     TextLabel.Text = ParagraphText
-    TextLabel.Font = Enum.Font.GothamBold -- خط حلو يشبه بقية المكونات
+    TextLabel.Font = Enum.Font.GothamBold 
     TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.TextSize = 18
-    TextLabel.TextWrapped = true
+    TextLabel.TextSize = 16
+    TextLabel.TextWrapped = true 
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.TextYAlignment = Enum.TextYAlignment.Top
 
     return ParagraphFrame
 end
