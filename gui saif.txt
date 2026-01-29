@@ -712,16 +712,15 @@ function Components:CreateTextbox(TextboxName, Placeholder, Callback)
     return Textbox
 end
 
-function Components:CreateSlider(SliderName, minValue, maxValue, DefaultValue, Callback)
+function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     SliderName = SliderName or "Slider"
     minValue = minValue or 0
     maxValue = maxValue or 100
-    DefaultValue = DefaultValue or minValue
     Callback = Callback or function() end
 
     local SliderFrame = Instance.new("Frame")
     SliderFrame.Parent = Display
-    SliderFrame.Size = UDim2.new(0, 301, 0, 60)
+    SliderFrame.Size = UDim2.new(0, 301, 0, 70) -- رفع السلايدر شوي
     SliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     SliderFrame.BorderSizePixel = 0
 
@@ -743,14 +742,13 @@ function Components:CreateSlider(SliderName, minValue, maxValue, DefaultValue, C
     local ValueBox = Instance.new("TextLabel")
     ValueBox.Parent = SliderFrame
     ValueBox.Size = UDim2.new(0, 50, 0, 20)
-    ValueBox.Position = UDim2.new(0.5, -25, 0, 25)
+    ValueBox.Position = UDim2.new(0.5, -25, 0, 22) -- فوق السلايدر
     ValueBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     ValueBox.BorderSizePixel = 0
     ValueBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     ValueBox.Font = Enum.Font.GothamBold
     ValueBox.TextSize = 16
-    ValueBox.Text = tostring(DefaultValue)
-    
+    ValueBox.Text = tostring(minValue)
     local ValueCorner = Instance.new("UICorner")
     ValueCorner.CornerRadius = UDim.new(0, 5)
     ValueCorner.Parent = ValueBox
@@ -759,117 +757,54 @@ function Components:CreateSlider(SliderName, minValue, maxValue, DefaultValue, C
     SliderBar.Parent = SliderFrame
     SliderBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     SliderBar.BorderSizePixel = 0
-    SliderBar.Position = UDim2.new(0.05, 0, 0.7, 0)
+    SliderBar.Position = UDim2.new(0.05, 0, 0.6, 0)
     SliderBar.Size = UDim2.new(0.9, 0, 0, 5)
-    
-    -- 🔥 إضافة الـUICorner للـBar
-    local BarCorner = Instance.new("UICorner")
-    BarCorner.CornerRadius = UDim.new(1, 0)
-    BarCorner.Parent = SliderBar
 
     local SliderFill = Instance.new("Frame")
     SliderFill.Parent = SliderBar
     SliderFill.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
     SliderFill.BorderSizePixel = 0
     SliderFill.Size = UDim2.new(0, 0, 1, 0)
-    
-    -- 🔥 إضافة الـUICorner للـFill
-    local FillCorner = Instance.new("UICorner")
-    FillCorner.CornerRadius = UDim.new(1, 0)
-    FillCorner.Parent = SliderFill
 
-    -- 🔥 التغيير المهم: استخدم TextButton بدلاً من Frame
-    local SliderButton = Instance.new("TextButton")
-    SliderButton.Parent = SliderFrame -- 🔥 جعله ابن للـSliderFrame مباشرة وليس للـBar
+    local SliderButton = Instance.new("Frame")
+    SliderButton.Parent = SliderBar
     SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     SliderButton.Size = UDim2.new(0, 15, 0, 15)
-    SliderButton.Position = UDim2.new(0.05, -7.5, 0.7, 0.5)
-    SliderButton.AnchorPoint = Vector2.new(0, 0.5)
+    SliderButton.Position = UDim2.new(0, 0, 0.5, -7)
     SliderButton.BorderSizePixel = 0
-    SliderButton.Text = ""
-    SliderButton.AutoButtonColor = false
-    SliderButton.ZIndex = 5
-    
     local ButtonCorner = Instance.new("UICorner")
     ButtonCorner.CornerRadius = UDim.new(1, 0)
     ButtonCorner.Parent = SliderButton
 
-    local UserInputService = game:GetService("UserInputService")
+    local uis = game:GetService("UserInputService")
     local dragging = false
-    local currentValue = DefaultValue
-    
-    -- دالة تحديث السلايدر
+
     local function updateSlider(inputPos)
-        local barAbsPos = SliderBar.AbsolutePosition.X
-        local barAbsSize = SliderBar.AbsoluteSize.X
-        local relativePos = math.clamp(inputPos.X - barAbsPos, 0, barAbsSize)
-        local percent = relativePos / barAbsSize
-        local value = math.floor(percent * (maxValue - minValue) + minValue)
-        
-        currentValue = value
-        SliderFill.Size = UDim2.new(percent, 0, 1, 0)
-        SliderButton.Position = UDim2.new(percent, -7.5, 0.7, 0.5)
+        local relativePos = math.clamp(inputPos.X - SliderBar.AbsolutePosition.X, 0, SliderBar.AbsoluteSize.X)
+        local value = math.floor((relativePos / SliderBar.AbsoluteSize.X) * (maxValue - minValue) + minValue)
+        SliderFill.Size = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, 0, 1, 0)
+        SliderButton.Position = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, -7, 0.5, -7)
         ValueBox.Text = tostring(value)
-        
         pcall(Callback, value)
     end
 
-    -- 🔥 تحديث القيمة الافتراضية عند الإنشاء
-    local defaultPercent = (DefaultValue - minValue) / (maxValue - minValue)
-    SliderFill.Size = UDim2.new(defaultPercent, 0, 1, 0)
-    SliderButton.Position = UDim2.new(defaultPercent, -7.5, 0.7, 0.5)
-
-    -- أحداث النقر والسحب
-    SliderButton.MouseButton1Down:Connect(function()
-        dragging = true
-    end)
-
-    SliderBar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    SliderButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
-            updateSlider(input.Position)
         end
     end)
 
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            updateSlider(input.Position)
-        end
-    end)
-
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    SliderButton.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
     end)
 
-    -- 🔥 إضافة تأثيرات للمس
-    SliderButton.MouseEnter:Connect(function()
-        TweenService:Create(SliderButton, TweenInfo.new(0.1), {
-            Size = UDim2.new(0, 18, 0, 18)
-        }):Play()
+    uis.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+            updateSlider(input.Position)
+        end
     end)
-
-    SliderButton.MouseLeave:Connect(function()
-        TweenService:Create(SliderButton, TweenInfo.new(0.1), {
-            Size = UDim2.new(0, 15, 0, 15)
-        }):Play()
-    end)
-
-    -- 🔥 دالة لتحديث القيمة يدوياً
-    function SliderFrame:SetValue(newValue)
-        newValue = math.clamp(newValue, minValue, maxValue)
-        currentValue = newValue
-        local percent = (newValue - minValue) / (maxValue - minValue)
-        SliderFill.Size = UDim2.new(percent, 0, 1, 0)
-        SliderButton.Position = UDim2.new(percent, -7.5, 0.7, 0.5)
-        ValueBox.Text = tostring(newValue)
-        pcall(Callback, newValue)
-    end
-
-    function SliderFrame:GetValue()
-        return currentValue
-    end
 
     return SliderFrame
 end
