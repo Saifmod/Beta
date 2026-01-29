@@ -263,7 +263,7 @@ SearchBox.Size = UDim2.new(0, 277, 0, 28)
 SearchBox.ClearTextOnFocus = false
 SearchBox.Font = Enum.Font.SourceSansBold
 SearchBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
-SearchBox.PlaceholderText = "Search..."
+SearchBox.PlaceholderText = "بحث"
 SearchBox.Text = ""
 SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 SearchBox.TextSize = 17.000
@@ -710,6 +710,101 @@ function Components:CreateTextbox(TextboxName, Placeholder, Callback)
     end)
 
     return Textbox
+end
+
+function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
+    SliderName = SliderName or "Slider"
+    minValue = minValue or 0
+    maxValue = maxValue or 100
+    Callback = Callback or function() end
+
+    local SliderFrame = Instance.new("Frame")
+    SliderFrame.Parent = Display
+    SliderFrame.Size = UDim2.new(0, 301, 0, 60)
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    SliderFrame.BorderSizePixel = 0
+
+    local FrameCorner = Instance.new("UICorner")
+    FrameCorner.CornerRadius = UDim.new(0, 10)
+    FrameCorner.Parent = SliderFrame
+
+    local NameLabel = Instance.new("TextLabel")
+    NameLabel.Parent = SliderFrame
+    NameLabel.Size = UDim2.new(1, 0, 0, 20)
+    NameLabel.Position = UDim2.new(0, 0, 0, 0)
+    NameLabel.BackgroundTransparency = 1
+    NameLabel.Font = Enum.Font.GothamBold
+    NameLabel.Text = SliderName
+    NameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NameLabel.TextSize = 18
+    NameLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+    local ValueBox = Instance.new("TextLabel")
+    ValueBox.Parent = SliderFrame
+    ValueBox.Size = UDim2.new(0, 50, 0, 20)
+    ValueBox.Position = UDim2.new(1, -55, 0, 20)
+    ValueBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    ValueBox.BorderSizePixel = 0
+
+    local ValueCorner = Instance.new("UICorner")
+    ValueCorner.CornerRadius = UDim.new(0, 5)
+    ValueCorner.Parent = ValueBox
+
+    local SliderBar = Instance.new("Frame")
+    SliderBar.Parent = SliderFrame
+    SliderBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    SliderBar.BorderSizePixel = 0
+    SliderBar.Position = UDim2.new(0.05, 0, 0.6, 0)
+    SliderBar.Size = UDim2.new(0.9, 0, 0, 5)
+
+    local SliderFill = Instance.new("Frame")
+    SliderFill.Parent = SliderBar
+    SliderFill.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    SliderFill.BorderSizePixel = 0
+    SliderFill.Size = UDim2.new(0, 0, 1, 0)
+
+    local SliderButton = Instance.new("TextButton")
+    SliderButton.Parent = SliderBar
+    SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SliderButton.Size = UDim2.new(0, 15, 0, 15)
+    SliderButton.Position = UDim2.new(0, 0, 0.5, -7)
+    SliderButton.BorderSizePixel = 0
+
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(1, 0)
+    ButtonCorner.Parent = SliderButton
+
+    local UserInputService = game:GetService("UserInputService")
+    local dragging = false
+
+    local function updateSlider(inputPos)
+        local relativePos = math.clamp(inputPos.X - SliderBar.AbsolutePosition.X, 0, SliderBar.AbsoluteSize.X)
+        local value = math.floor((relativePos / SliderBar.AbsoluteSize.X) * (maxValue - minValue) + minValue)
+        SliderFill.Size = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, 0, 1, 0)
+        SliderButton.Position = UDim2.new(relativePos / SliderBar.AbsoluteSize.X, -7, 0.5, -7)
+        ValueBox.Text = tostring(value)
+        pcall(Callback, value)
+    end
+
+    SliderButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+        end
+    end)
+
+    SliderButton.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            updateSlider(input.Position)
+        end
+    end)
+
+    return SliderFrame
 end
 
 return Components
