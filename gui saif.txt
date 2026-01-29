@@ -822,32 +822,48 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     return SliderFrame
 end
 
-function Components:CreateParagraph(Text)
-    Text = Text or "نص هنا"
-    local ParagraphFrame = Instance.new("Frame")
-    ParagraphFrame.Name = "Paragraph"
-    ParagraphFrame.Parent = Display
-    ParagraphFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    ParagraphFrame.BorderSizePixel = 0
-    ParagraphFrame.Size = UDim2.new(0, 301, 0, 50)
+function Components:CreateParagraph(Text, Alignment, BGColor, TextColor)
+    Text = Text or "النص هنا"
+    Alignment = Alignment or "Left" 
+    BGColor = BGColor or Color3.fromRGB(45, 45, 45)
+    TextColor = TextColor or Color3.fromRGB(255, 255, 255)
 
-    local Label = Instance.new("TextLabel")
-    Label.Parent = ParagraphFrame
-    Label.BackgroundTransparency = 1
-    Label.Size = UDim2.new(1, 0, 1, 0)
-    Label.Font = Enum.Font.Gotham
-    Label.Text = Text
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Label.TextSize = 16
-    Label.TextWrapped = true
-    Label.TextXAlignment = Enum.TextXAlignment.Left
-    Label.TextYAlignment = Enum.TextYAlignment.Top
+    local ParagraphFrame = Instance.new("Frame")
+    ParagraphFrame.BackgroundColor3 = BGColor
+    ParagraphFrame.BorderSizePixel = 0
+    ParagraphFrame.Size = UDim2.new(0, 301, 0, 70)
+    ParagraphFrame.Parent = Display
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 10)
+    Corner.Parent = ParagraphFrame
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = ParagraphFrame
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Size = UDim2.new(1, -10, 1, -10) -- padding 5px
+    TextLabel.Position = UDim2.new(0, 5, 0, 5)
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.Text = Text
+    TextLabel.TextColor3 = TextColor
+    TextLabel.TextSize = 18
+    TextLabel.TextWrapped = true
+
+    if Alignment:lower() == "center" then
+        TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+    elseif Alignment:lower() == "right" then
+        TextLabel.TextXAlignment = Enum.TextXAlignment.Right
+    else
+        TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    end
 
     return ParagraphFrame
 end
 
-function Components:CreateSection(SectionName)
+function Components:CreateSection(SectionName, Alignment)
     SectionName = SectionName or "قسم"
+    Alignment = Alignment or "Left"
+
     local SectionFrame = Instance.new("Frame")
     SectionFrame.Name = SectionName.."Section"
     SectionFrame.Parent = Display
@@ -858,12 +874,19 @@ function Components:CreateSection(SectionName)
     local Label = Instance.new("TextLabel")
     Label.Parent = SectionFrame
     Label.BackgroundTransparency = 1
-    Label.Size = UDim2.new(1,0,1,0)
+    Label.Size = UDim2.new(1, 0, 1, 0)
     Label.Font = Enum.Font.GothamBold
     Label.Text = SectionName
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.TextSize = 20
-    Label.TextXAlignment = Enum.TextXAlignment.Left
+
+    if Alignment:lower() == "center" then
+        Label.TextXAlignment = Enum.TextXAlignment.Center
+    elseif Alignment:lower() == "right" then
+        Label.TextXAlignment = Enum.TextXAlignment.Right
+    else
+        Label.TextXAlignment = Enum.TextXAlignment.Left
+    end
 
     return SectionFrame
 end
