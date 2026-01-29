@@ -919,14 +919,13 @@ function Components:CreateTag(TagInfo)
         IconImg.BackgroundTransparency = 1
         IconImg.Size = UDim2.new(0, 20, 0, 20)
         IconImg.Position = UDim2.new(1, -25, 0.5, -10)
-        -- هنا تحط أي أيقونة حسب ID
+
         if Icon == "github" then
-            IconImg.Image = "rbxassetid://6764432408" -- مثال أيقونة Github
+            IconImg.Image = "rbxassetid://6764432408" 
         end
         IconImg.ScaleType = Enum.ScaleType.Fit
     end
 
-    -- Animation بسيط عند الماوس
     TagFrame.MouseEnter:Connect(function()
         game:GetService("TweenService"):Create(Corner,TweenInfo.new(0.3, Enum.EasingStyle.Quad), {CornerRadius = UDim.new(0, 13)}):Play()
     end)
@@ -935,6 +934,43 @@ function Components:CreateTag(TagInfo)
     end)
 
     return TagFrame
+end
+
+function Components:CreateButton(ButtonName, Callback)
+    ButtonName = ButtonName or "Button"
+    Callback = Callback or function() end
+
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 200, 0, 40)
+    Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Button.BorderSizePixel = 0
+    Button.Text = ButtonName
+    Button.Font = Enum.Font.GothamBold
+    Button.TextSize = 20
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.Parent = Display
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Button
+
+    local TweenService = game:GetService("TweenService")
+    Button.MouseEnter:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+    end)
+    Button.MouseLeave:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+    end)
+
+    Button.MouseButton1Click:Connect(function()
+        pcall(Callback)
+
+        TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0), {Size = UDim2.new(0, 190, 0, 38)}):Play()
+        wait(0.1)
+        TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {Size = UDim2.new(0, 200, 0, 40)}):Play()
+    end)
+
+    return Button
 end
 
 return Components
