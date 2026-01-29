@@ -742,10 +742,13 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     local ValueBox = Instance.new("TextLabel")
     ValueBox.Parent = SliderFrame
     ValueBox.Size = UDim2.new(0, 50, 0, 20)
-    ValueBox.Position = UDim2.new(1, -55, 0, 20)
+    ValueBox.Position = UDim2.new(0.5, -25, 0.4, 20) -- رفع الرقم شوي فوق
     ValueBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     ValueBox.BorderSizePixel = 0
-
+    ValueBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ValueBox.Font = Enum.Font.GothamBold
+    ValueBox.TextSize = 16
+    ValueBox.Text = tostring(minValue)
     local ValueCorner = Instance.new("UICorner")
     ValueCorner.CornerRadius = UDim.new(0, 5)
     ValueCorner.Parent = ValueBox
@@ -754,7 +757,7 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     SliderBar.Parent = SliderFrame
     SliderBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     SliderBar.BorderSizePixel = 0
-    SliderBar.Position = UDim2.new(0.05, 0, 0.6, 0)
+    SliderBar.Position = UDim2.new(0.05, 0, 0.7, 0)
     SliderBar.Size = UDim2.new(0.9, 0, 0, 5)
 
     local SliderFill = Instance.new("Frame")
@@ -763,13 +766,12 @@ function Components:CreateSlider(SliderName, minValue, maxValue, Callback)
     SliderFill.BorderSizePixel = 0
     SliderFill.Size = UDim2.new(0, 0, 1, 0)
 
-    local SliderButton = Instance.new("TextButton")
+    local SliderButton = Instance.new("Frame") -- دائرة بدون نص
     SliderButton.Parent = SliderBar
     SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     SliderButton.Size = UDim2.new(0, 15, 0, 15)
     SliderButton.Position = UDim2.new(0, 0, 0.5, -7)
     SliderButton.BorderSizePixel = 0
-
     local ButtonCorner = Instance.new("UICorner")
     ButtonCorner.CornerRadius = UDim.new(1, 0)
     ButtonCorner.Parent = SliderButton
