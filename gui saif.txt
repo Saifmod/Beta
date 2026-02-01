@@ -301,6 +301,61 @@ Search.BorderSizePixel = 0
 Search.Position = UDim2.new(0.0223844014, 0, 0.0254545454, 0)
 Search.Size = UDim2.new(0, 300, 0, 28)
 
+local SearchBox = Instance.new("TextBox")
+Search.Name = "Search"
+Search.Parent = Display
+Search.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Search.BorderSizePixel = 0
+Search.Position = UDim2.new(0.022, 0, 0.025, 0)
+Search.Size = UDim2.new(0, 300, 0, 32)
+
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0, 12)
+SearchCorner.Parent = Search
+
+local SearchBox = Instance.new("TextBox")
+SearchBox.Name = "SearchBox"
+SearchBox.Parent = Search
+SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SearchBox.BackgroundTransparency = 1
+SearchBox.BorderSizePixel = 0
+SearchBox.Position = UDim2.new(0.03, 0, 0, 0)
+SearchBox.Size = UDim2.new(0, 275, 0, 32)
+SearchBox.PlaceholderText = "بحث"
+SearchBox.Font = Enum.Font.SourceSansBold
+SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchBox.TextSize = 17
+SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+
+local BoxCorner = Instance.new("UICorner")
+BoxCorner.CornerRadius = UDim.new(0, 12)
+BoxCorner.Parent = SearchBox
+
+local function UpdateSearch()
+    local text = SearchBox.Text:lower()
+    for i, v in pairs(Display:GetChildren()) do
+        if v:IsA("GuiObject") and v.Name ~= "Search" then
+
+            if string.find(v.Name:lower(), text) then
+                v.Visible = true
+            else
+                v.Visible = false
+            end
+        end
+    end
+end
+
+SearchBox:GetPropertyChangedSignal("Text"):Connect(UpdateSearch)
+
+SearchBox.Focused:Connect(function()
+    SearchBox.BackgroundTransparency = 0.1
+end)
+
+SearchBox.FocusLost:Connect(function()
+    SearchBox.BackgroundTransparency = 1
+end)
+
+        else
 
 
             Tab.Name = TabName
