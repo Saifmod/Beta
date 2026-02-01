@@ -40,16 +40,14 @@ local TabListLayout = Instance.new("UIListLayout")
 local PageContainer = Instance.new("Folder")
 local on = false
 
--- ScreenGui
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Name = "MyGUI"
+ScreenGui.Name = "guisaif"
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Main Frame
-Main.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
@@ -57,7 +55,6 @@ Main.BorderSizePixel = 2
 Main.BorderColor3 = Color3.fromRGB(255, 255, 255)
 Main.Parent = ScreenGui
 
--- حواف مستديرة
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 12)
 MainCorner.Parent = Main
