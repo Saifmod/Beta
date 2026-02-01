@@ -47,10 +47,14 @@ ScreenGui.Name = Name
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MyGUI"  -- ممكن تحط الاسم اللي تحبه
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") -- ✅ هنا الفرق
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") -- ✅ مهم Parent يكون PlayerGui
 
 -- Main Frame
 local Main = Instance.new("Frame")
@@ -58,7 +62,14 @@ Main.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
-Main.Parent = ScreenGui -- لازم تحدد Parent للظهور
+Main.BorderSizePixel = 2 -- ✅ خلي الحواف تظهر
+Main.BorderColor3 = Color3.fromRGB(255, 255, 255) -- ✅ لون الحواف أبيض
+Main.Parent = ScreenGui
+
+-- حواف مستديرة (اختياري)
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
 
 
 local UserInputService = game:GetService("UserInputService")
