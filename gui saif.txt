@@ -40,17 +40,64 @@ local TabListLayout = Instance.new("UIListLayout")
 local PageContainer = Instance.new("Folder")
 local on = false
 
+-- ScreenGui
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Name = Name
+ScreenGui.Name = "MyGUI"
 
-Main.Name = "Main"
-Main.Parent = ScreenGui
-Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-Main.BorderSizePixel = 0
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Main Frame
+Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- أبيض ناصع
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
+Main.BorderSizePixel = 0 -- بدون حد
+Main.Parent = ScreenGui
+
+-- حواف مستديرة
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
+
+-- Topbar
+Topbar.Name = "Topbar"
+Topbar.Parent = Main
+Topbar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Topbar.ZIndex = 2
+Topbar.BorderSizePixel = 0
+Topbar.Position = UDim2.new(-0.002, 0,0.019, 0)
+Topbar.Size = UDim2.new(0, 497,0, 26)
+Topbar.Font = Enum.Font.SourceSansBold
+Topbar.Text = "My GUI"
+Topbar.TextColor3 = Color3.fromRGB(255, 255, 255)
+Topbar.TextSize = 25.000
+Topbar.TextWrapped = true
+
+Tabs.Name = "Tabs"
+Tabs.Parent = Main
+Tabs.Active = true
+Tabs.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Tabs.BorderSizePixel = 0
+Tabs.Position = UDim2.new(0.019, 0, 0.118, 0)
+Tabs.Size = UDim2.new(0, 155, 0, 275)
+Tabs.ScrollBarThickness = 0
+
+TabButtons.Name = "TabButtons"
+TabButtons.Parent = Tabs
+TabButtons.BackgroundTransparency = 1
+TabButtons.Position = UDim2.new(0.174, 0, 0.0109, 0)
+TabButtons.Size = UDim2.new(0, 100, 0, 100)
+
+TabListLayout.Name = "TabListLayout"
+TabListLayout.Parent = TabButtons
+TabListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabListLayout.Padding = UDim.new(0, 6)
+
+PageContainer.Name = "PageContainer"
+PageContainer.Parent = Main
 
 
 local UserInputService = game:GetService("UserInputService")
