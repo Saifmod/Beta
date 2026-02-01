@@ -44,16 +44,20 @@ ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Name = Name
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "saifgui"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") -- ✅ هنا الفرق
+
+local Main = Instance.new("Frame")
 Main.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
-
-Main.BorderSizePixel = 2
-Main.BorderColor3 = Color3.fromRGB(255, 255, 255)
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
-MainCorner.Parent = Main
+Main.Parent = ScreenGui
 
 
 local UserInputService = game:GetService("UserInputService")
