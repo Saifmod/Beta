@@ -30,13 +30,27 @@ function Ui:Set(bool,i,name1)
     SaveSettings()
 end
 
+local ScreenGui = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
-Main.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
+local Topbar = Instance.new("TextLabel")
+local OpenClose = Instance.new("ImageButton")
+local Tabs = Instance.new("ScrollingFrame")
+local TabButtons = Instance.new("Frame")
+local TabListLayout = Instance.new("UIListLayout")
+local PageContainer = Instance.new("Folder")
+local on = false
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Name = Name
+
+Main.Name = "Main"
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Main.BorderSizePixel = 0
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
-Main.BorderSizePixel = 0
-Main.Parent = ScreenGui
 
 
 local UserInputService = game:GetService("UserInputService")
