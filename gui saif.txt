@@ -238,7 +238,9 @@ PageContainer.Parent = Main
             Tab.Name = TabName
 Tab.Parent = TabButtons
 Tab.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Tab.BorderSizePixel = 0
+Tab.BackgroundTransparency = 0
+Tab.BorderSizePixel = 2
+Tab.BorderColor3 = Color3.fromRGB(255, 255, 255)
 Tab.Size = UDim2.new(0, 127, 0, 35)
 Tab.Font = Enum.Font.SourceSansBold
 Tab.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -307,29 +309,29 @@ Search.Parent = Display
 Search.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 Search.BorderSizePixel = 0
 Search.Position = UDim2.new(0.022, 0, 0.025, 0)
-Search.Size = UDim2.new(0, 300, 0, 32)
-
-local SearchCorner = Instance.new("UICorner")
-SearchCorner.CornerRadius = UDim.new(0, 12)
-SearchCorner.Parent = Search
+Search.Size = UDim2.new(0, 300, 0, 28)
 
 local SearchBox = Instance.new("TextBox")
 SearchBox.Name = "SearchBox"
 SearchBox.Parent = Search
-SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-SearchBox.BackgroundTransparency = 1
+SearchBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SearchBox.BorderSizePixel = 0
-SearchBox.Position = UDim2.new(0.03, 0, 0, 0)
-SearchBox.Size = UDim2.new(0, 275, 0, 32)
-SearchBox.PlaceholderText = "بحث"
+SearchBox.Position = UDim2.new(0.02, 0, 0, 0)
+SearchBox.Size = UDim2.new(0, 296, 0, 28)
+SearchBox.ClearTextOnFocus = false
 SearchBox.Font = Enum.Font.SourceSansBold
+SearchBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
+SearchBox.PlaceholderText = "بحث"
+SearchBox.Text = ""
 SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 SearchBox.TextSize = 17
+SearchBox.TextWrapped = true
 SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+SearchBox.TextTransparency = 0
 
-local BoxCorner = Instance.new("UICorner")
-BoxCorner.CornerRadius = UDim.new(0, 12)
-BoxCorner.Parent = SearchBox
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0, 8)
+SearchCorner.Parent = SearchBox
 
 local function UpdateSearch()
     local text = SearchBox.Text:lower()
