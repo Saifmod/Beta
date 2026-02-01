@@ -106,70 +106,99 @@ Topbar.TextColor3 = Color3.fromRGB(255, 255, 255)
 Topbar.TextSize = 25.000
 Topbar.TextWrapped = true
 
-local Close = Instance.new("TextButton")
-Close.Name = "Close"
-Close.Parent = Topbar
-Close.BackgroundTransparency = 1
-Close.Size = UDim2.new(0, 26, 0, 26)
-Close.Position = UDim2.new(1, -32, 0, 2)
-Close.Text = "×"
-Close.Font = Enum.Font.GothamBold
-Close.TextSize = 26
-Close.TextColor3 = Color3.fromRGB(255, 90, 90)
-Close.ZIndex = 5
-
-Close.MouseButton1Click:Connect(function()
-	game:GetService("TweenService"):Create(Main, TweenInfo.new(
-		0.35,
-		Enum.EasingStyle.Back,
-		Enum.EasingDirection.In
-	), {
-		Position = UDim2.new(0.5, -248, -1, 0)
-	}):Play()
-
-	task.wait(0.35)
-	ScreenGui:Destroy()
-end)
-
--- تعديل زر Open/Close ليصير حلو وحواف
-OpenClose.Name = "Open/Close"
-OpenClose.Parent = Topbar
-OpenClose.BackgroundColor3 = Color3.fromRGB(0, 200, 0) -- لون أخضر جذاب
-OpenClose.Position = UDim2.new(0.01, 0, 0.1, 0) -- على اليسار
-OpenClose.Size = UDim2.new(0, 30, 0, 30) -- حجم مناسب
-OpenClose.ZIndex = 2
-OpenClose.BackgroundTransparency = 0
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "Close"
+CloseButton.Parent = Topbar
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 90, 90) -- نفس لون ×
+CloseButton.Size = UDim2.new(0, 26, 0, 26)
+CloseButton.Position = UDim2.new(1, -32, 0, 2) -- على يمين PlusMinus
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 20
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Text = "×"
+CloseButton.ZIndex = 5
 
 -- حواف دائرية
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 8)
-Corner.Parent = OpenClose
+local CornerClose = Instance.new("UICorner")
+CornerClose.CornerRadius = UDim.new(0, 6)
+CornerClose.Parent = CloseButton
 
--- نص داخل الزر بدل الصورة
-local Text = Instance.new("TextLabel")
-Text.Parent = OpenClose
-Text.Size = UDim2.new(1, 0, 1, 0)
-Text.BackgroundTransparency = 1
-Text.Text = "-" -- علامة التصغير
-Text.Font = Enum.Font.GothamBold
-Text.TextSize = 20
-Text.TextColor3 = Color3.fromRGB(255, 255, 255)
-Text.TextScaled = true
+local TweenService = game:GetService("TweenService")
 
--- حركة الزر
-local on = false
-OpenClose.MouseButton1Click:Connect(function ()
-    on = not on
-    if on then
-        game:GetService("TweenService"):Create(Main,TweenInfo.new(0.5),{Size = UDim2.new(0, 496,0, 25)}):Play()
-        wait(0.5)
-        Text.Text = "+" -- تغيير النص عند التصغير
-    else
-        game:GetService("TweenService"):Create(Main,TweenInfo.new(0.5),{Size = UDim2.new(0, 496, 0, 320)}):Play()
-        wait(0.5)
-        Text.Text = "-" -- يرجع النص عند الفتح
-    end
+-- تأثير عند الضغط
+CloseButton.MouseButton1Click:Connect(function()
+    -- تحريك Main للخارج
+    TweenService:Create(Main, TweenInfo.new(
+        0.35,
+        Enum.EasingStyle.Back,
+        Enum.EasingDirection.In
+    ), {
+        Position = UDim2.new(0.5, -248, -1, 0)
+    }):Play()
+
+    -- حذف الواجهة بعد الانتظار
+    task.wait(0.35)
+    ScreenGui:Destroy()
 end)
+
+-- تأثير hover (اختياري)
+CloseButton.MouseEnter:Connect(function()
+    TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+
+CloseButton.MouseLeave:Connect(function()
+    TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 90, 90)}):Play()
+end)
+
+-- زر ± على يمين ×
+local PlusMinus = Instance.new("TextButton")
+PlusMinus.Name = "PlusMinus"
+PlusMinus.Parent = Topbar
+PlusMinus.BackgroundColor3 = Color3.fromRGB(0, 200, 0) -- لون جذاب
+PlusMinus.Size = UDim2.new(0, 26, 0, 26)
+PlusMinus.Position = UDim2.new(1, -60, 0, 2) -- قبل ×
+PlusMinus.Font = Enum.Font.GothamBold
+PlusMinus.TextSize = 20
+PlusMinus.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlusMinus.ZIndex = 5
+
+-- حواف دائرية
+local CornerPM = Instance.new("UICorner")
+CornerPM.CornerRadius = UDim.new(0, 6)
+CornerPM.Parent = PlusMinus
+
+-- حالة تصغير/تكبير
+local minimized = false
+
+local TweenService = game:GetService("TweenService")
+
+-- دالة لتحديث رمز الزر حسب حجم Main
+local function UpdatePlusMinus()
+    if Main.Size.Y.Offset > 50 then
+        PlusMinus.Text = "-"  -- الواجهة كبيرة
+        TweenService:Create(PlusMinus, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 200, 0)}):Play()
+    else
+        PlusMinus.Text = "+"  -- الواجهة صغيرة
+        TweenService:Create(PlusMinus, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 150, 0)}):Play()
+    end
+end
+
+-- عند الضغط على الزر لتغيير الحجم
+PlusMinus.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    
+    if minimized then
+        TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 496,0, 25)}):Play()
+    else
+        TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 496,0, 320)}):Play()
+    end
+
+    -- تحديث رمز الزر بعد انتهاء الحركة
+    task.delay(0.5, UpdatePlusMinus)
+end)
+
+-- تحديث الزر أول ما ينزل الواجهة
+UpdatePlusMinus()
 
 Tabs.Name = "Tabs"
 Tabs.Parent = Main
