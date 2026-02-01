@@ -109,25 +109,22 @@ Topbar.TextWrapped = true
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "Close"
 CloseButton.Parent = Topbar
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 90, 90) -- نفس لون ×
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 90, 90)
 CloseButton.Size = UDim2.new(0, 26, 0, 26)
-CloseButton.Position = UDim2.new(1, -32, 0, 2) -- على يمين PlusMinus
+CloseButton.Position = UDim2.new(1, -32, 0, 2)
 CloseButton.Font = Enum.Font.GothamBold
 CloseButton.TextSize = 20
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.Text = "×"
 CloseButton.ZIndex = 5
 
--- حواف دائرية
 local CornerClose = Instance.new("UICorner")
 CornerClose.CornerRadius = UDim.new(0, 6)
 CornerClose.Parent = CloseButton
 
 local TweenService = game:GetService("TweenService")
 
--- تأثير عند الضغط
 CloseButton.MouseButton1Click:Connect(function()
-    -- تحريك Main للخارج
     TweenService:Create(Main, TweenInfo.new(
         0.35,
         Enum.EasingStyle.Back,
@@ -136,12 +133,10 @@ CloseButton.MouseButton1Click:Connect(function()
         Position = UDim2.new(0.5, -248, -1, 0)
     }):Play()
 
-    -- حذف الواجهة بعد الانتظار
     task.wait(0.35)
     ScreenGui:Destroy()
 end)
 
--- تأثير hover (اختياري)
 CloseButton.MouseEnter:Connect(function()
     TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}):Play()
 end)
@@ -150,7 +145,6 @@ CloseButton.MouseLeave:Connect(function()
     TweenService:Create(CloseButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 90, 90)}):Play()
 end)
 
--- زر ± على يمين ×
 local PlusMinus = Instance.new("TextButton")
 PlusMinus.Name = "PlusMinus"
 PlusMinus.Parent = Topbar
@@ -162,28 +156,24 @@ PlusMinus.TextSize = 20
 PlusMinus.TextColor3 = Color3.fromRGB(255, 255, 255)
 PlusMinus.ZIndex = 5
 
--- حواف دائرية
 local CornerPM = Instance.new("UICorner")
 CornerPM.CornerRadius = UDim.new(0, 6)
 CornerPM.Parent = PlusMinus
 
--- حالة تصغير/تكبير
 local minimized = false
 
 local TweenService = game:GetService("TweenService")
 
--- دالة لتحديث رمز الزر حسب حجم Main
 local function UpdatePlusMinus()
     if Main.Size.Y.Offset > 50 then
-        PlusMinus.Text = "-"  -- الواجهة كبيرة
+        PlusMinus.Text = "-"
         TweenService:Create(PlusMinus, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 200, 0)}):Play()
     else
-        PlusMinus.Text = "+"  -- الواجهة صغيرة
+        PlusMinus.Text = "+"
         TweenService:Create(PlusMinus, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 150, 0)}):Play()
     end
 end
 
--- عند الضغط على الزر لتغيير الحجم
 PlusMinus.MouseButton1Click:Connect(function()
     minimized = not minimized
     
@@ -193,11 +183,9 @@ PlusMinus.MouseButton1Click:Connect(function()
         TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 496,0, 320)}):Play()
     end
 
-    -- تحديث رمز الزر بعد انتهاء الحركة
     task.delay(0.5, UpdatePlusMinus)
 end)
 
--- تحديث الزر أول ما ينزل الواجهة
 UpdatePlusMinus()
 
 Tabs.Name = "Tabs"
@@ -313,21 +301,13 @@ Search.BorderSizePixel = 0
 Search.Position = UDim2.new(0.0223844014, 0, 0.0254545454, 0)
 Search.Size = UDim2.new(0, 300, 0, 28)
 
-Icon.Name = "Icon"
-Icon.Parent = Search
-Icon.BackgroundTransparency = 1.000
-Icon.Size = UDim2.new(0, 29, 0, 28)
-Icon.ZIndex = 2
-Icon.Image = "rbxassetid://6764432408"
-Icon.ImageRectOffset = Vector2.new(0, 800)
-Icon.ImageRectSize = Vector2.new(50, 50)
-
+local SearchBox = Instance.new("TextBox")
 SearchBox.Name = "SearchBox"
 SearchBox.Parent = Search
-SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-SearchBox.BackgroundTransparency = 1.000
+SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- نفس اللون
+SearchBox.BackgroundTransparency = 1
 SearchBox.BorderSizePixel = 0
-SearchBox.Position = UDim2.new(0.115015976, 0, 0, 0)
+SearchBox.Position = UDim2.new(0.115, 0, 0, 0)
 SearchBox.Size = UDim2.new(0, 277, 0, 28)
 SearchBox.ClearTextOnFocus = false
 SearchBox.Font = Enum.Font.SourceSansBold
@@ -335,23 +315,38 @@ SearchBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
 SearchBox.PlaceholderText = "بحث"
 SearchBox.Text = ""
 SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-SearchBox.TextSize = 17.000
-SearchBox.TextTransparency = 0.060
+SearchBox.TextSize = 17
+SearchBox.TextTransparency = 0.06
 SearchBox.TextWrapped = true
 SearchBox.TextXAlignment = Enum.TextXAlignment.Left
 
-SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0, 6)
+SearchCorner.Parent = SearchBox
+
+local function UpdateSearch()
     local text = SearchBox.Text:lower()
-        for i, v in pairs(Display:GetChildren())do
-            if v:IsA("GuiObject")  then
-                if string.find(v.Name:lower(),text) then 
-                    v.Visible = true
-                elseif v.Name ~= "Search" then
-                    v.Visible = false
-                end
+    for i, v in pairs(Display:GetChildren()) do
+        if v:IsA("GuiObject") and v.Name ~= "Search" then
+
+            if string.find(v.Name:lower(), text) then
+                v.Visible = true
+            else
+                v.Visible = false
             end
         end
-    end)
+    end
+end
+
+SearchBox:GetPropertyChangedSignal("Text"):Connect(UpdateSearch)
+
+SearchBox.Focused:Connect(function()
+    SearchBox.BackgroundTransparency = 0.1
+end)
+
+SearchBox.FocusLost:Connect(function()
+    SearchBox.BackgroundTransparency = 1
+end)
 
         else
 
