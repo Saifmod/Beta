@@ -106,7 +106,6 @@ Topbar.TextColor3 = Color3.fromRGB(255, 255, 255)
 Topbar.TextSize = 25.000
 Topbar.TextWrapped = true
 
--- زر الإغلاق ×
 local Close = Instance.new("TextButton")
 Close.Name = "Close"
 Close.Parent = Topbar
@@ -132,27 +131,43 @@ Close.MouseButton1Click:Connect(function()
 	ScreenGui:Destroy()
 end)
 
+-- تعديل زر Open/Close ليصير حلو وحواف
 OpenClose.Name = "Open/Close"
 OpenClose.Parent = Topbar
-OpenClose.BackgroundTransparency = 1.000
-OpenClose.LayoutOrder = 8
-OpenClose.Position = UDim2.new(0.943207145, 0, -0.02827584, 0)
-OpenClose.Rotation = 180.000
-OpenClose.Size = UDim2.new(0, 25, 0, 25)
+OpenClose.BackgroundColor3 = Color3.fromRGB(0, 200, 0) -- لون أخضر جذاب
+OpenClose.Position = UDim2.new(0.01, 0, 0.1, 0) -- على اليسار
+OpenClose.Size = UDim2.new(0, 30, 0, 30) -- حجم مناسب
 OpenClose.ZIndex = 2
-OpenClose.Image = "rbxassetid://3926305904"
-OpenClose.ImageRectOffset = Vector2.new(524, 764)
-OpenClose.ImageRectSize = Vector2.new(36, 36)
+OpenClose.BackgroundTransparency = 0
+
+-- حواف دائرية
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 8)
+Corner.Parent = OpenClose
+
+-- نص داخل الزر بدل الصورة
+local Text = Instance.new("TextLabel")
+Text.Parent = OpenClose
+Text.Size = UDim2.new(1, 0, 1, 0)
+Text.BackgroundTransparency = 1
+Text.Text = "-" -- علامة التصغير
+Text.Font = Enum.Font.GothamBold
+Text.TextSize = 20
+Text.TextColor3 = Color3.fromRGB(255, 255, 255)
+Text.TextScaled = true
+
+-- حركة الزر
+local on = false
 OpenClose.MouseButton1Click:Connect(function ()
     on = not on
-    if on == true then
+    if on then
         game:GetService("TweenService"):Create(Main,TweenInfo.new(0.5),{Size = UDim2.new(0, 496,0, 25)}):Play()
         wait(0.5)
-        game:GetService("TweenService"):Create(OpenClose,TweenInfo.new(0.14),{Rotation = 0}):Play()
+        Text.Text = "+" -- تغيير النص عند التصغير
     else
         game:GetService("TweenService"):Create(Main,TweenInfo.new(0.5),{Size = UDim2.new(0, 496, 0, 320)}):Play()
         wait(0.5)
-        game:GetService("TweenService"):Create(OpenClose,TweenInfo.new(0.14),{Rotation = 180}):Play()
+        Text.Text = "-" -- يرجع النص عند الفتح
     end
 end)
 
