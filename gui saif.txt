@@ -42,17 +42,17 @@ local on = false
 
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Name = "guisaif"
+ScreenGui.Name = "MyGUI"
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-Main.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
+Main.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- أبيض فاتح شوي
 Main.Position = UDim2.new(0.261832356, 0, 0.310139179, 0)
 Main.Size = UDim2.new(0, 496, 0, 320)
 Main.ClipsDescendants = true
-Main.BorderSizePixel = 2
-Main.BorderColor3 = Color3.fromRGB(255, 255, 255)
+Main.BorderSizePixel = 1
+Main.BorderColor3 = Color3.fromRGB(255, 255, 255) -- الحواف بيضاء
 Main.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
