@@ -244,6 +244,12 @@ function Library:CreateWindow(options)
         TabOrder += 1
 
         local Tab = {}
+        local ElementOrder = 0
+
+local function GetNextOrder()
+    ElementOrder += 1
+    return ElementOrder
+end
 
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 30)
@@ -346,6 +352,7 @@ function Library:CreateWindow(options)
 
             local frame = Instance.new("Frame")
             frame.Size = UDim2.new(1, 0, 0, 32)
+            frame.LayoutOrder = GetNextOrder()
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
@@ -408,6 +415,7 @@ function Tab:CreateInput(text, placeholder, callback)
 
     local Frame = Instance.new("Frame")
     Frame.Size = UDim2.new(1, 0, 0, 42)
+    Frame.LayoutOrder = GetNextOrder()
     Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
     Frame.BorderSizePixel = 0
     Frame.Parent = content
@@ -510,8 +518,9 @@ end
         function Tab:CreateToggle(text, default, callback)
 
             local frame = Instance.new("Frame")
-            frame.Size = UDim2.new(1, 0, 0, 32)
-            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+frame.Size = UDim2.new(1, 0, 0, 32)
+frame.LayoutOrder = GetNextOrder()
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
 
@@ -675,8 +684,9 @@ end
             default = math.clamp(default, min, max)
 
             local frame = Instance.new("Frame")
-            frame.Size = UDim2.new(1, 0, 0, 40)
-            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+frame.Size = UDim2.new(1, 0, 0, 40)
+frame.LayoutOrder = GetNextOrder()
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
 
@@ -848,8 +858,9 @@ function Tab:CreateDropdown(text, options, callback)
     options = options or {}
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 0, 34)
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+frame.Size = UDim2.new(1, 0, 0, 34)
+frame.LayoutOrder = GetNextOrder()
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
     frame.BorderSizePixel = 0
     frame.ClipsDescendants = false
     frame.Parent = content
@@ -1159,7 +1170,7 @@ end
             Divider.Size = UDim2.new(1, 0, 0, 1)
             Divider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
             Divider.BorderSizePixel = 0
-            Divider.LayoutOrder = #content:GetChildren()
+            Divider.LayoutOrder = GetNextOrder()
             Divider.Parent = content
 
             return Divider
@@ -1175,7 +1186,7 @@ end
             Paragraph.Size = UDim2.new(1, 0, 0, 55)
             Paragraph.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
             Paragraph.BorderSizePixel = 0
-            Paragraph.LayoutOrder = #content:GetChildren()
+            Paragraph.LayoutOrder = GetNextOrder()
             Paragraph.Parent = content
 
             local PCorner = Instance.new("UICorner")
@@ -1222,7 +1233,7 @@ end
             Label.TextSize = 12
             Label.Font = Enum.Font.GothamSemibold
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.LayoutOrder = #content:GetChildren()
+            Label.LayoutOrder = GetNextOrder()
             Label.Parent = content
 
             return Label
