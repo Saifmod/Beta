@@ -1288,8 +1288,128 @@ end
     --==================================================
 
     CloseBtn.MouseButton1Click:Connect(function()
+
+    local Dialog = Instance.new("Frame")
+    Dialog.Size = UDim2.new(0, 280, 0, 140)
+    Dialog.Position = UDim2.new(0.5, -140, 0.5, -70)
+    Dialog.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
+    Dialog.BorderSizePixel = 0
+    Dialog.ZIndex = 100
+    Dialog.Parent = ScreenGui
+
+    local DialogCorner = Instance.new("UICorner")
+    DialogCorner.CornerRadius = UDim.new(0, 10)
+    DialogCorner.Parent = Dialog
+
+    local DialogStroke = Instance.new("UIStroke")
+    DialogStroke.Color = Color3.fromRGB(50, 50, 70)
+    DialogStroke.Thickness = 1.5
+    DialogStroke.Parent = Dialog
+
+    local DialogTitle = Instance.new("TextLabel")
+    DialogTitle.Size = UDim2.new(1, -20, 0, 30)
+    DialogTitle.Position = UDim2.new(0, 10, 0, 12)
+    DialogTitle.BackgroundTransparency = 1
+    DialogTitle.Text = "تأكيد الإغلاق"
+    DialogTitle.TextColor3 = Color3.fromRGB(230, 220, 200)
+    DialogTitle.Font = Enum.Font.GothamBold
+    DialogTitle.TextSize = 14
+    DialogTitle.TextXAlignment = Enum.TextXAlignment.Center
+    DialogTitle.ZIndex = 101
+    DialogTitle.Parent = Dialog
+
+    local DialogText = Instance.new("TextLabel")
+    DialogText.Size = UDim2.new(1, -20, 0, 30)
+    DialogText.Position = UDim2.new(0, 10, 0, 42)
+    DialogText.BackgroundTransparency = 1
+    DialogText.Text = "هل تريد إغلاق السكربت؟"
+    DialogText.TextColor3 = Color3.fromRGB(190, 190, 210)
+    DialogText.Font = Enum.Font.Gotham
+    DialogText.TextSize = 11
+    DialogText.TextXAlignment = Enum.TextXAlignment.Center
+    DialogText.ZIndex = 101
+    DialogText.Parent = Dialog
+
+    local YesBtn = Instance.new("TextButton")
+    YesBtn.Size = UDim2.new(0, 100, 0, 32)
+    YesBtn.Position = UDim2.new(0.5, -105, 1, -42)
+    YesBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+    YesBtn.BorderSizePixel = 0
+    YesBtn.Text = "نعم"
+    YesBtn.TextColor3 = Color3.fromRGB(230, 220, 200)
+    YesBtn.Font = Enum.Font.GothamBold
+    YesBtn.TextSize = 11
+    YesBtn.ZIndex = 101
+    YesBtn.Parent = Dialog
+
+    local YesCorner = Instance.new("UICorner")
+    YesCorner.CornerRadius = UDim.new(0, 6)
+    YesCorner.Parent = YesBtn
+
+    local NoBtn = Instance.new("TextButton")
+    NoBtn.Size = UDim2.new(0, 100, 0, 32)
+    NoBtn.Position = UDim2.new(0.5, 5, 1, -42)
+    NoBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+    NoBtn.BorderSizePixel = 0
+    NoBtn.Text = "لا"
+    NoBtn.TextColor3 = Color3.fromRGB(200, 200, 220)
+    NoBtn.Font = Enum.Font.GothamBold
+    NoBtn.TextSize = 11
+    NoBtn.ZIndex = 101
+    NoBtn.Parent = Dialog
+
+    local NoCorner = Instance.new("UICorner")
+    NoCorner.CornerRadius = UDim.new(0, 6)
+    NoCorner.Parent = NoBtn
+
+    YesBtn.MouseEnter:Connect(function()
+        TweenService:Create(
+            YesBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+            }
+        ):Play()
+    end)
+
+    YesBtn.MouseLeave:Connect(function()
+        TweenService:Create(
+            YesBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            }
+        ):Play()
+    end)
+
+    NoBtn.MouseEnter:Connect(function()
+        TweenService:Create(
+            NoBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+            }
+        ):Play()
+    end)
+
+    NoBtn.MouseLeave:Connect(function()
+        TweenService:Create(
+            NoBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            }
+        ):Play()
+    end)
+
+    YesBtn.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
+
+    NoBtn.MouseButton1Click:Connect(function()
+        Dialog:Destroy()
+    end)
+end)
 
     --==================================================
     -- MINIMIZE
