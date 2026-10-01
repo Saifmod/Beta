@@ -245,13 +245,6 @@ function Library:CreateWindow(options)
 
         local Tab = {}
 
-        local ElementOrder = 0
-
-        local function NextElementOrder()
-            ElementOrder += 1
-            return ElementOrder
-        end
-
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 30)
         btn.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
@@ -355,7 +348,6 @@ function Library:CreateWindow(options)
             frame.Size = UDim2.new(1, 0, 0, 32)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
-            frame.LayoutOrder = NextElementOrder()
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -418,7 +410,6 @@ function Tab:CreateInput(text, placeholder, callback)
     Frame.Size = UDim2.new(1, 0, 0, 42)
     Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
     Frame.BorderSizePixel = 0
-    Frame.LayoutOrder = NextElementOrder()
     Frame.Parent = content
 
     local Corner = Instance.new("UICorner")
@@ -522,7 +513,6 @@ end
             frame.Size = UDim2.new(1, 0, 0, 32)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
-            frame.LayoutOrder = NextElementOrder()
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -688,7 +678,6 @@ end
             frame.Size = UDim2.new(1, 0, 0, 40)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
-            frame.LayoutOrder = NextElementOrder()
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -863,7 +852,6 @@ end
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.ClipsDescendants = false
-            frame.LayoutOrder = NextElementOrder()
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -948,44 +936,69 @@ end
 
                 if isOpen then
 
-                    listFrame.Visible = true
+    listFrame.Visible = true
 
-                    local targetHeight = math.min(
-                        #options * 24 + 6,
-                        150
-                    )
+    local targetHeight = math.min(
+        #options * 24 + 6,
+        150
+    )
 
-                    TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, targetHeight)
-                        }
-                    ):Play()
+    task.defer(function()
 
-                    arrow.Text = "▲"
+        local frameBottom =
+            frame.AbsolutePosition.Y + frame.AbsoluteSize.Y
 
-                else
+        local viewportBottom =
+            content.AbsolutePosition.Y + content.AbsoluteSize.Y
 
-                    local tween = TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, 0)
-                        }
-                    )
+        local needed =
+            frameBottom + targetHeight + 10 - viewportBottom
 
-                    tween:Play()
+        if needed > 0 then
 
-                    tween.Completed:Connect(function()
-                        if not isOpen then
-                            listFrame.Visible = false
-                        end
-                    end)
+            local maxCanvasY = math.max(
+                0,
+                content.AbsoluteCanvasSize.Y - content.AbsoluteSize.Y
+            )
 
-                    arrow.Text = "▼"
-                end
-            end)
+            content.CanvasPosition = Vector2.new(
+                content.CanvasPosition.X,
+                math.min(
+                    content.CanvasPosition.Y + needed,
+                    maxCanvasY
+                )
+            )
+        end
+    end)
+
+    TweenService:Create(
+        listFrame,
+        TweenInfo.new(0.2),
+        {
+            Size = UDim2.new(1, 0, 0, targetHeight)
+        }
+    ):Play()
+
+    arrow.Text = "▲"
+
+else
+
+    local tween = TweenService:Create(
+        listFrame,
+        TweenInfo.new(0.2),
+        {
+            Size = UDim2.new(1, 0, 0, 0)
+        }
+    ):Play()
+
+    tween.Completed:Connect(function()
+        if not isOpen then
+            listFrame.Visible = false
+        end
+    end)
+
+    arrow.Text = "▼"
+end
 
             for index, option in pairs(options) do
 
@@ -1067,7 +1080,7 @@ end
             Divider.Size = UDim2.new(1, 0, 0, 1)
             Divider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
             Divider.BorderSizePixel = 0
-            Divider.LayoutOrder = NextElementOrder()
+            Divider.LayoutOrder = #content:GetChildren()
             Divider.Parent = content
 
             return Divider
@@ -1083,7 +1096,7 @@ end
             Paragraph.Size = UDim2.new(1, 0, 0, 55)
             Paragraph.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
             Paragraph.BorderSizePixel = 0
-            Paragraph.LayoutOrder = NextElementOrder()
+            Paragraph.LayoutOrder = #content:GetChildren()
             Paragraph.Parent = content
 
             local PCorner = Instance.new("UICorner")
@@ -1130,7 +1143,7 @@ end
             Label.TextSize = 12
             Label.Font = Enum.Font.GothamSemibold
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.LayoutOrder = NextElementOrder()
+            Label.LayoutOrder = #content:GetChildren()
             Label.Parent = content
 
             return Label
@@ -1139,13 +1152,264 @@ end
         return Tab
     end
 
+--==================================================
+-- SAIF NOTIFICATIONS
+--==================================================
+
+local NotificationHolder = Instance.new("Frame")
+NotificationHolder.Name = "Notifications"
+NotificationHolder.Size = UDim2.new(0, 280, 1, -20)
+NotificationHolder.Position = UDim2.new(1, -290, 0, 10)
+NotificationHolder.BackgroundTransparency = 1
+NotificationHolder.Parent = ScreenGui
+
+local NotificationLayout = Instance.new("UIListLayout")
+NotificationLayout.Padding = UDim.new(0, 8)
+NotificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+NotificationLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+NotificationLayout.SortOrder = Enum.SortOrder.LayoutOrder
+NotificationLayout.Parent = NotificationHolder
+
+local NotificationOrder = 0
+
+function Window:Notify(data)
+
+    data = data or {}
+
+    local titleText = tostring(data.Title or "SAIF")
+    local descriptionText = tostring(data.Description or "")
+    local duration = tonumber(data.Duration) or 3
+
+    NotificationOrder += 1
+
+    local notification = Instance.new("Frame")
+    notification.Name = "Notification"
+    notification.Size = UDim2.new(0, 260, 0, 68)
+    notification.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
+    notification.BorderSizePixel = 0
+    notification.BackgroundTransparency = 1
+    notification.LayoutOrder = NotificationOrder
+    notification.Parent = NotificationHolder
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = notification
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(50, 50, 70)
+    stroke.Thickness = 1
+    stroke.Transparency = 1
+    stroke.Parent = notification
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -20, 0, 24)
+    title.Position = UDim2.new(0, 10, 0, 6)
+    title.BackgroundTransparency = 1
+    title.Text = titleText
+    title.TextColor3 = Color3.fromRGB(230, 220, 200)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 15
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.TextTransparency = 1
+    title.Parent = notification
+
+    local description = Instance.new("TextLabel")
+    description.Size = UDim2.new(1, -20, 0, 30)
+    description.Position = UDim2.new(0, 10, 0, 32)
+    description.BackgroundTransparency = 1
+    description.Text = descriptionText
+    description.TextColor3 = Color3.fromRGB(170, 170, 190)
+    description.Font = Enum.Font.Gotham
+    description.TextSize = 13
+    description.TextWrapped = true
+    description.TextXAlignment = Enum.TextXAlignment.Left
+    description.TextTransparency = 1
+    description.Parent = notification
+
+    notification.Position = UDim2.new(1, 280, 0, 0)
+
+    TweenService:Create(
+        notification,
+        TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+        {
+            Position = UDim2.new(0, 0, 0, 0),
+            BackgroundTransparency = 0
+        }
+    ):Play()
+
+    TweenService:Create(stroke, TweenInfo.new(0.3), {
+        Transparency = 0
+    }):Play()
+
+    TweenService:Create(title, TweenInfo.new(0.3), {
+        TextTransparency = 0
+    }):Play()
+
+    TweenService:Create(description, TweenInfo.new(0.3), {
+        TextTransparency = 0
+    }):Play()
+
+    task.delay(duration, function()
+
+        if not notification or not notification.Parent then
+            return
+        end
+
+        TweenService:Create(stroke, TweenInfo.new(0.3), {
+            Transparency = 1
+        }):Play()
+
+        TweenService:Create(title, TweenInfo.new(0.3), {
+            TextTransparency = 1
+        }):Play()
+
+        TweenService:Create(description, TweenInfo.new(0.3), {
+            TextTransparency = 1
+        }):Play()
+
+        local hide = TweenService:Create(
+            notification,
+            TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In),
+            {
+                Position = UDim2.new(1, 280, 0, 0),
+                BackgroundTransparency = 1
+            }
+        )
+
+        hide:Play()
+        hide.Completed:Wait()
+
+        notification:Destroy()
+    end)
+end
+
     --==================================================
     -- CLOSE
     --==================================================
 
     CloseBtn.MouseButton1Click:Connect(function()
+
+    local Dialog = Instance.new("Frame")
+    Dialog.Size = UDim2.new(0, 280, 0, 140)
+    Dialog.Position = UDim2.new(0.5, -140, 0.5, -70)
+    Dialog.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
+    Dialog.BorderSizePixel = 0
+    Dialog.ZIndex = 100
+    Dialog.Parent = ScreenGui
+
+    local DialogCorner = Instance.new("UICorner")
+    DialogCorner.CornerRadius = UDim.new(0, 10)
+    DialogCorner.Parent = Dialog
+
+    local DialogStroke = Instance.new("UIStroke")
+    DialogStroke.Color = Color3.fromRGB(50, 50, 70)
+    DialogStroke.Thickness = 1.5
+    DialogStroke.Parent = Dialog
+
+    local DialogTitle = Instance.new("TextLabel")
+    DialogTitle.Size = UDim2.new(1, -20, 0, 30)
+    DialogTitle.Position = UDim2.new(0, 10, 0, 12)
+    DialogTitle.BackgroundTransparency = 1
+    DialogTitle.Text = "تأكيد الإغلاق"
+    DialogTitle.TextColor3 = Color3.fromRGB(230, 220, 200)
+    DialogTitle.Font = Enum.Font.GothamBold
+    DialogTitle.TextSize = 14
+    DialogTitle.TextXAlignment = Enum.TextXAlignment.Center
+    DialogTitle.ZIndex = 101
+    DialogTitle.Parent = Dialog
+
+    local DialogText = Instance.new("TextLabel")
+    DialogText.Size = UDim2.new(1, -20, 0, 30)
+    DialogText.Position = UDim2.new(0, 10, 0, 42)
+    DialogText.BackgroundTransparency = 1
+    DialogText.Text = "هل تريد إغلاق السكربت؟"
+    DialogText.TextColor3 = Color3.fromRGB(190, 190, 210)
+    DialogText.Font = Enum.Font.Gotham
+    DialogText.TextSize = 11
+    DialogText.TextXAlignment = Enum.TextXAlignment.Center
+    DialogText.ZIndex = 101
+    DialogText.Parent = Dialog
+
+    local YesBtn = Instance.new("TextButton")
+    YesBtn.Size = UDim2.new(0, 100, 0, 32)
+    YesBtn.Position = UDim2.new(0.5, -105, 1, -42)
+    YesBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+    YesBtn.BorderSizePixel = 0
+    YesBtn.Text = "نعم"
+    YesBtn.TextColor3 = Color3.fromRGB(230, 220, 200)
+    YesBtn.Font = Enum.Font.GothamBold
+    YesBtn.TextSize = 11
+    YesBtn.ZIndex = 101
+    YesBtn.Parent = Dialog
+
+    local YesCorner = Instance.new("UICorner")
+    YesCorner.CornerRadius = UDim.new(0, 6)
+    YesCorner.Parent = YesBtn
+
+    local NoBtn = Instance.new("TextButton")
+    NoBtn.Size = UDim2.new(0, 100, 0, 32)
+    NoBtn.Position = UDim2.new(0.5, 5, 1, -42)
+    NoBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+    NoBtn.BorderSizePixel = 0
+    NoBtn.Text = "لا"
+    NoBtn.TextColor3 = Color3.fromRGB(200, 200, 220)
+    NoBtn.Font = Enum.Font.GothamBold
+    NoBtn.TextSize = 11
+    NoBtn.ZIndex = 101
+    NoBtn.Parent = Dialog
+
+    local NoCorner = Instance.new("UICorner")
+    NoCorner.CornerRadius = UDim.new(0, 6)
+    NoCorner.Parent = NoBtn
+
+    YesBtn.MouseEnter:Connect(function()
+        TweenService:Create(
+            YesBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+            }
+        ):Play()
+    end)
+
+    YesBtn.MouseLeave:Connect(function()
+        TweenService:Create(
+            YesBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            }
+        ):Play()
+    end)
+
+    NoBtn.MouseEnter:Connect(function()
+        TweenService:Create(
+            NoBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+            }
+        ):Play()
+    end)
+
+    NoBtn.MouseLeave:Connect(function()
+        TweenService:Create(
+            NoBtn,
+            TweenInfo.new(0.15),
+            {
+                BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            }
+        ):Play()
+    end)
+
+    YesBtn.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
+
+    NoBtn.MouseButton1Click:Connect(function()
+        Dialog:Destroy()
+    end)
+end)
 
     --==================================================
     -- MINIMIZE
