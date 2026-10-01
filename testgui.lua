@@ -1044,6 +1044,111 @@ function Tab:CreateDropdown(text, options, callback)
     return frame
 end
 
+
+--==================================================
+-- SAIF NOTIFICATION
+--==================================================
+
+local TweenService = game:GetService("TweenService")
+
+-- Notification Holder
+local NotificationHolder = Instance.new("Frame")
+NotificationHolder.Name = "NotificationHolder"
+NotificationHolder.Size = UDim2.new(0, 300, 1, -20)
+NotificationHolder.Position = UDim2.new(1, -315, 0, 10)
+NotificationHolder.BackgroundTransparency = 1
+NotificationHolder.Parent = ScreenGui
+
+local NotificationLayout = Instance.new("UIListLayout")
+NotificationLayout.Padding = UDim.new(0, 8)
+NotificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+NotificationLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+NotificationLayout.SortOrder = Enum.SortOrder.LayoutOrder
+NotificationLayout.Parent = NotificationHolder
+
+
+function Window:Notify(data)
+
+    data = data or {}
+
+    local Title = data.Title or "SAIF"
+    local Description = data.Description or ""
+    local Duration = data.Duration or 3
+
+    local Notification = Instance.new("Frame")
+    Notification.Name = "Notification"
+    Notification.Size = UDim2.new(0, 0, 0, 70)
+    Notification.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Notification.BackgroundTransparency = 0.05
+    Notification.BorderSizePixel = 0
+    Notification.ClipsDescendants = true
+    Notification.LayoutOrder = os.clock()
+    Notification.Parent = NotificationHolder
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Notification
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(55, 55, 55)
+    Stroke.Thickness = 1
+    Stroke.Transparency = 0.2
+    Stroke.Parent = Notification
+
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Size = UDim2.new(1, -20, 0, 25)
+    TitleLabel.Position = UDim2.new(0, 10, 0, 7)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Text = tostring(Title)
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.TextSize = 15
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.Parent = Notification
+
+    local DescriptionLabel = Instance.new("TextLabel")
+    DescriptionLabel.Size = UDim2.new(1, -20, 0, 30)
+    DescriptionLabel.Position = UDim2.new(0, 10, 0, 32)
+    DescriptionLabel.BackgroundTransparency = 1
+    DescriptionLabel.Text = tostring(Description)
+    DescriptionLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+    DescriptionLabel.TextSize = 13
+    DescriptionLabel.Font = Enum.Font.Gotham
+    DescriptionLabel.TextWrapped = true
+    DescriptionLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DescriptionLabel.Parent = Notification
+
+    -- دخول الإشعار
+    TweenService:Create(
+        Notification,
+        TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+        {
+            Size = UDim2.new(0, 300, 0, 70)
+        }
+    ):Play()
+
+    -- انتظار مدة الإشعار
+    task.delay(Duration, function()
+
+        if not Notification or not Notification.Parent then
+            return
+        end
+
+        local OutTween = TweenService:Create(
+            Notification,
+            TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In),
+            {
+                Size = UDim2.new(0, 0, 0, 70)
+            }
+        )
+
+        OutTween:Play()
+        OutTween.Completed:Wait()
+
+        Notification:Destroy()
+    end)
+end
+
         --==================================================
         -- DIVIDER
         --==================================================
