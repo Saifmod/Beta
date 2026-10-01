@@ -839,236 +839,251 @@ end
             }
         end
 
-        --==================================================
-        -- DROPDOWN
-        --==================================================
+--==================================================
+-- DROPDOWN
+--==================================================
 
-        function Tab:CreateDropdown(text, options, callback)
+function Tab:CreateDropdown(text, options, callback)
 
-            options = options or {}
+    options = options or {}
 
-            local frame = Instance.new("Frame")
-            frame.Size = UDim2.new(1, 0, 0, 32)
-            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-            frame.BorderSizePixel = 0
-            frame.ClipsDescendants = false
-            frame.Parent = content
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, 0, 0, 32)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    frame.BorderSizePixel = 0
+    frame.ClipsDescendants = false
+    frame.Parent = content
 
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(0, 6)
-            corner.Parent = frame
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = frame
 
-            local stroke = Instance.new("UIStroke")
-            stroke.Color = Color3.fromRGB(50, 50, 70)
-            stroke.Thickness = 1
-            stroke.Parent = frame
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(50, 50, 70)
+    stroke.Thickness = 1
+    stroke.Parent = frame
 
-            local label = Instance.new("TextLabel")
-            label.Size = UDim2.new(1, -30, 1, 0)
-            label.Position = UDim2.new(0, 10, 0, 0)
-            label.BackgroundTransparency = 1
-            label.Text = text
-            label.TextColor3 = Color3.fromRGB(200, 200, 220)
-            label.Font = Enum.Font.GothamBold
-            label.TextSize = 11
-            label.TextXAlignment = Enum.TextXAlignment.Left
-            label.Parent = frame
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -30, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(200, 200, 220)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 11
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = frame
 
-            local arrow = Instance.new("TextLabel")
-            arrow.Size = UDim2.new(0, 20, 1, 0)
-            arrow.Position = UDim2.new(1, -25, 0, 0)
-            arrow.BackgroundTransparency = 1
-            arrow.Text = "▼"
-            arrow.TextColor3 = Color3.fromRGB(150, 150, 170)
-            arrow.Font = Enum.Font.GothamBold
-            arrow.TextSize = 10
-            arrow.Parent = frame
-
-            local listFrame = Instance.new("Frame")
-            listFrame.Size = UDim2.new(1, 0, 0, 0)
-            listFrame.Position = UDim2.new(0, 0, 1, 4)
-            listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
-            listFrame.BorderSizePixel = 0
-            listFrame.Visible = false
-            listFrame.ClipsDescendants = true
-            listFrame.ZIndex = 10
-            listFrame.Parent = frame
-
-            local listCorner = Instance.new("UICorner")
-            listCorner.CornerRadius = UDim.new(0, 6)
-            listCorner.Parent = listFrame
-
-            local listStroke = Instance.new("UIStroke")
-            listStroke.Color = Color3.fromRGB(50, 50, 70)
-            listStroke.Thickness = 1
-            listStroke.Parent = listFrame
-
-            local scroll = Instance.new("ScrollingFrame")
-            scroll.Size = UDim2.new(1, -6, 1, -6)
-            scroll.Position = UDim2.new(0, 3, 0, 3)
-            scroll.BackgroundTransparency = 1
-            scroll.BorderSizePixel = 0
-            scroll.ScrollBarThickness = 3
-            scroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 110)
-            scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-            scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-            scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-            scroll.ZIndex = 11
-            scroll.Parent = listFrame
-
-            local listLayout = Instance.new("UIListLayout")
-            listLayout.Padding = UDim.new(0, 2)
-            listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            listLayout.Parent = scroll
-
-            local isOpen = false
-
-            local button = Instance.new("TextButton")
-            button.Size = UDim2.new(1, 0, 1, 0)
-            button.BackgroundTransparency = 1
-            button.Text = ""
-            button.ZIndex = 5
-            button.Parent = frame
-
-            button.MouseButton1Click:Connect(function()
-
-                isOpen = not isOpen
-
-                if isOpen then
-
-    listFrame.Visible = true
-
-    local targetHeight = math.min(
-        #options * 24 + 6,
-        150
-    )
-
-    task.defer(function()
-
-        local frameBottom =
-            frame.AbsolutePosition.Y + frame.AbsoluteSize.Y
-
-        local viewportBottom =
-            content.AbsolutePosition.Y + content.AbsoluteSize.Y
-
-        local needed =
-            frameBottom + targetHeight + 10 - viewportBottom
-
-        if needed > 0 then
-
-            local maxCanvasY = math.max(
-                0,
-                content.AbsoluteCanvasSize.Y - content.AbsoluteSize.Y
-            )
-
-            content.CanvasPosition = Vector2.new(
-                content.CanvasPosition.X,
-                math.min(
-                    content.CanvasPosition.Y + needed,
-                    maxCanvasY
-                )
-            )
-        end
-    end)
-
-    TweenService:Create(
-        listFrame,
-        TweenInfo.new(0.2),
-        {
-            Size = UDim2.new(1, 0, 0, targetHeight)
-        }
-    ):Play()
-
-    arrow.Text = "▲"
-
-else
-
-    local tween = TweenService:Create(
-        listFrame,
-        TweenInfo.new(0.2),
-        {
-            Size = UDim2.new(1, 0, 0, 0)
-        }
-    ):Play()
-
-    tween.Completed:Connect(function()
-        if not isOpen then
-            listFrame.Visible = false
-        end
-    end)
-
+    local arrow = Instance.new("TextLabel")
+    arrow.Size = UDim2.new(0, 20, 1, 0)
+    arrow.Position = UDim2.new(1, -25, 0, 0)
+    arrow.BackgroundTransparency = 1
     arrow.Text = "▼"
-end
+    arrow.TextColor3 = Color3.fromRGB(150, 150, 170)
+    arrow.Font = Enum.Font.GothamBold
+    arrow.TextSize = 10
+    arrow.Parent = frame
 
-            for index, option in pairs(options) do
+    local listFrame = Instance.new("Frame")
+    listFrame.Size = UDim2.new(1, 0, 0, 0)
+    listFrame.Position = UDim2.new(0, 0, 1, 4)
+    listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
+    listFrame.BorderSizePixel = 0
+    listFrame.Visible = false
+    listFrame.ClipsDescendants = true
+    listFrame.ZIndex = 10
+    listFrame.Parent = frame
 
-                local opt = Instance.new("TextButton")
-                opt.Size = UDim2.new(1, 0, 0, 22)
-                opt.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-                opt.BorderSizePixel = 0
-                opt.Text = tostring(option)
-                opt.TextColor3 = Color3.fromRGB(200, 200, 220)
-                opt.Font = Enum.Font.GothamBold
-                opt.TextSize = 10
-                opt.ZIndex = 12
-                opt.LayoutOrder = index
-                opt.Parent = scroll
+    local listCorner = Instance.new("UICorner")
+    listCorner.CornerRadius = UDim.new(0, 6)
+    listCorner.Parent = listFrame
 
-                local optCorner = Instance.new("UICorner")
-                optCorner.CornerRadius = UDim.new(0, 4)
-                optCorner.Parent = opt
+    local listStroke = Instance.new("UIStroke")
+    listStroke.Color = Color3.fromRGB(50, 50, 70)
+    listStroke.Thickness = 1
+    listStroke.Parent = listFrame
 
-                opt.MouseEnter:Connect(function()
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Size = UDim2.new(1, -6, 1, -6)
+    scroll.Position = UDim2.new(0, 3, 0, 3)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.ScrollBarThickness = 3
+    scroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 110)
+    scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+    scroll.ZIndex = 11
+    scroll.Parent = listFrame
 
-                    TweenService:Create(
-                        opt,
-                        TweenInfo.new(0.15),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-                        }
-                    ):Play()
-                end)
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 2)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Parent = scroll
 
-                opt.MouseLeave:Connect(function()
+    local isOpen = false
 
-                    TweenService:Create(
-                        opt,
-                        TweenInfo.new(0.15),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-                        }
-                    ):Play()
-                end)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, 0, 1, 0)
+    button.BackgroundTransparency = 1
+    button.Text = ""
+    button.ZIndex = 5
+    button.Parent = frame
 
-                opt.MouseButton1Click:Connect(function()
+    button.MouseButton1Click:Connect(function()
 
-                    label.Text = text .. ": " .. tostring(option)
+        isOpen = not isOpen
 
-                    local tween = TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, 0)
-                        }
+        if isOpen then
+
+            listFrame.Visible = true
+
+            local targetHeight = math.min(
+                #options * 24 + 6,
+                150
+            )
+
+            task.defer(function()
+
+                local frameBottom =
+                    frame.AbsolutePosition.Y + frame.AbsoluteSize.Y
+
+                local viewportBottom =
+                    content.AbsolutePosition.Y + content.AbsoluteSize.Y
+
+                local needed =
+                    frameBottom + targetHeight + 10 - viewportBottom
+
+                if needed > 0 then
+
+                    local maxCanvasY = math.max(
+                        0,
+                        content.AbsoluteCanvasSize.Y - content.AbsoluteSize.Y
                     )
 
-                    tween:Play()
+                    content.CanvasPosition = Vector2.new(
+                        content.CanvasPosition.X,
+                        math.min(
+                            content.CanvasPosition.Y + needed,
+                            maxCanvasY
+                        )
+                    )
+                end
+            end)
 
-                    tween.Completed:Connect(function()
-                        listFrame.Visible = false
-                    end)
+            TweenService:Create(
+                listFrame,
+                TweenInfo.new(0.2),
+                {
+                    Size = UDim2.new(1, 0, 0, targetHeight)
+                }
+            ):Play()
 
-                    arrow.Text = "▼"
-                    isOpen = false
+            arrow.Text = "▲"
 
-                    if callback then
-                        callback(option)
-                    end
-                end)
+        else
+
+            local tween = TweenService:Create(
+                listFrame,
+                TweenInfo.new(0.2),
+                {
+                    Size = UDim2.new(1, 0, 0, 0)
+                }
+            )
+
+            tween:Play()
+
+            tween.Completed:Connect(function()
+                if not isOpen then
+                    listFrame.Visible = false
+                end
+            end)
+
+            arrow.Text = "▼"
+        end
+
+    end) -- هذا الـend كان ناقص
+
+    --==================================================
+    -- DROPDOWN OPTIONS
+    --==================================================
+
+    for index, option in pairs(options) do
+
+        local opt = Instance.new("TextButton")
+        opt.Size = UDim2.new(1, 0, 0, 22)
+        opt.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+        opt.BorderSizePixel = 0
+        opt.Text = tostring(option)
+        opt.TextColor3 = Color3.fromRGB(200, 200, 220)
+        opt.Font = Enum.Font.GothamBold
+        opt.TextSize = 10
+        opt.ZIndex = 12
+        opt.LayoutOrder = index
+        opt.Parent = scroll
+
+        local optCorner = Instance.new("UICorner")
+        optCorner.CornerRadius = UDim.new(0, 4)
+        optCorner.Parent = opt
+
+        opt.MouseEnter:Connect(function()
+
+            TweenService:Create(
+                opt,
+                TweenInfo.new(0.15),
+                {
+                    BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+                }
+            ):Play()
+
+        end)
+
+        opt.MouseLeave:Connect(function()
+
+            TweenService:Create(
+                opt,
+                TweenInfo.new(0.15),
+                {
+                    BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+                }
+            ):Play()
+
+        end)
+
+        opt.MouseButton1Click:Connect(function()
+
+            label.Text = text .. ": " .. tostring(option)
+
+            local tween = TweenService:Create(
+                listFrame,
+                TweenInfo.new(0.2),
+                {
+                    Size = UDim2.new(1, 0, 0, 0)
+                }
+            )
+
+            tween:Play()
+
+            tween.Completed:Connect(function()
+
+                if not isOpen then
+                    listFrame.Visible = false
+                end
+
+            end)
+
+            arrow.Text = "▼"
+            isOpen = false
+
+            if callback then
+                callback(option)
             end
 
-            return frame
-        end
+        end)
+    end
+
+    return frame
+end
 
         --==================================================
         -- DIVIDER
