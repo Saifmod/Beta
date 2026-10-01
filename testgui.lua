@@ -194,7 +194,6 @@ function Library:CreateWindow(options)
     local startPos
 
     TopBar.InputBegan:Connect(function(input)
-
         if input.UserInputType == Enum.UserInputType.MouseButton1
             or input.UserInputType == Enum.UserInputType.Touch then
 
@@ -205,7 +204,6 @@ function Library:CreateWindow(options)
     end)
 
     TopBar.InputEnded:Connect(function(input)
-
         if input.UserInputType == Enum.UserInputType.MouseButton1
             or input.UserInputType == Enum.UserInputType.Touch then
 
@@ -214,7 +212,6 @@ function Library:CreateWindow(options)
     end)
 
     UserInputService.InputChanged:Connect(function(input)
-
         if dragging and (
             input.UserInputType == Enum.UserInputType.MouseMovement
             or input.UserInputType == Enum.UserInputType.Touch
@@ -244,6 +241,7 @@ function Library:CreateWindow(options)
         TabOrder += 1
 
         local Tab = {}
+        local elementOrder = 0 -- عداد خاص لترتيب العناصر داخل هذا التاب
 
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 30)
@@ -266,7 +264,6 @@ function Library:CreateWindow(options)
         stroke.Parent = btn
 
         local content = Instance.new("ScrollingFrame")
-
         content.Name = name .. "_Content"
         content.Size = UDim2.new(1, -16, 1, -16)
         content.Position = UDim2.new(0, 8, 0, 8)
@@ -302,23 +299,16 @@ function Library:CreateWindow(options)
         }
 
         btn.MouseButton1Click:Connect(function()
+            if currentTab == name then return end
 
-            if currentTab == name then
-                return
-            end
-
-            -- إخفاء كل التابات فوراً
             for _, tab in pairs(Tabs) do
-
                 tab.content.Visible = false
                 tab.content.Position = UDim2.new(0, 8, 0, 8)
-
                 tab.button.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
                 tab.button.TextColor3 = Color3.fromRGB(200, 200, 220)
             end
 
             currentTab = name
-
             btn.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
             btn.TextColor3 = Color3.fromRGB(230, 220, 200)
 
@@ -327,14 +317,8 @@ function Library:CreateWindow(options)
 
             TweenService:Create(
                 content,
-                TweenInfo.new(
-                    0.18,
-                    Enum.EasingStyle.Quart,
-                    Enum.EasingDirection.Out
-                ),
-                {
-                    Position = UDim2.new(0, 8, 0, 8)
-                }
+                TweenInfo.new(0.18, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+                { Position = UDim2.new(0, 8, 0, 8) }
             ):Play()
         end)
 
@@ -343,11 +327,13 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateButton(text, callback)
+            elementOrder += 1
 
             local frame = Instance.new("Frame")
             frame.Size = UDim2.new(1, 0, 0, 32)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
+            frame.LayoutOrder = elementOrder
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -369,32 +355,15 @@ function Library:CreateWindow(options)
             button.Parent = frame
 
             button.MouseEnter:Connect(function()
-
-                TweenService:Create(
-                    frame,
-                    TweenInfo.new(0.15),
-                    {
-                        BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-                    }
-                ):Play()
+                TweenService:Create(frame, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(35, 35, 50) }):Play()
             end)
 
             button.MouseLeave:Connect(function()
-
-                TweenService:Create(
-                    frame,
-                    TweenInfo.new(0.15),
-                    {
-                        BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-                    }
-                ):Play()
+                TweenService:Create(frame, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(20, 20, 30) }):Play()
             end)
 
             button.MouseButton1Click:Connect(function()
-
-                if callback then
-                    callback()
-                end
+                if callback then callback() end
             end)
 
             return frame
@@ -405,11 +374,13 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateInput(text, placeholder, callback)
+            elementOrder += 1
 
             local Frame = Instance.new("Frame")
             Frame.Size = UDim2.new(1, 0, 0, 42)
             Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             Frame.BorderSizePixel = 0
+            Frame.LayoutOrder = elementOrder
             Frame.Parent = content
 
             local Corner = Instance.new("UICorner")
@@ -457,49 +428,21 @@ function Library:CreateWindow(options)
             BoxStroke.Parent = TextBox
 
             TextBox.Focused:Connect(function()
-                TweenService:Create(
-                    TextBox,
-                    TweenInfo.new(0.15),
-                    {BackgroundColor3 = Color3.fromRGB(35, 35, 50)}
-                ):Play()
-
-                TweenService:Create(
-                    BoxStroke,
-                    TweenInfo.new(0.15),
-                    {Color = Color3.fromRGB(80, 80, 110)}
-                ):Play()
+                TweenService:Create(TextBox, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(35, 35, 50)}):Play()
+                TweenService:Create(BoxStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(80, 80, 110)}):Play()
             end)
 
             TextBox.FocusLost:Connect(function()
-                TweenService:Create(
-                    TextBox,
-                    TweenInfo.new(0.15),
-                    {BackgroundColor3 = Color3.fromRGB(30, 30, 42)}
-                ):Play()
+                TweenService:Create(TextBox, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(30, 30, 42)}):Play()
+                TweenService:Create(BoxStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(50, 50, 70)}):Play()
 
-                TweenService:Create(
-                    BoxStroke,
-                    TweenInfo.new(0.15),
-                    {Color = Color3.fromRGB(50, 50, 70)}
-                ):Play()
-
-                if callback then
-                    callback(TextBox.Text)
-                end
+                if callback then callback(TextBox.Text) end
             end)
 
             return {
-                Set = function(value)
-                    TextBox.Text = tostring(value)
-                end,
-
-                Get = function()
-                    return TextBox.Text
-                end,
-
-                Clear = function()
-                    TextBox.Text = ""
-                end
+                Set = function(value) TextBox.Text = tostring(value) end,
+                Get = function() return TextBox.Text end,
+                Clear = function() TextBox.Text = "" end
             }
         end
 
@@ -508,11 +451,13 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateToggle(text, default, callback)
+            elementOrder += 1
 
             local frame = Instance.new("Frame")
             frame.Size = UDim2.new(1, 0, 0, 32)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
+            frame.LayoutOrder = elementOrder
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -566,62 +511,16 @@ function Library:CreateWindow(options)
             local toggled = default == true
 
             local function UpdateToggle()
-
                 if toggled then
-
-                    TweenService:Create(
-                        circle,
-                        TweenInfo.new(0.2),
-                        {
-                            Position = UDim2.new(1, -18, 0.5, -8)
-                        }
-                    ):Play()
-
-                    TweenService:Create(
-                        toggleBg,
-                        TweenInfo.new(0.2),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(30, 60, 40)
-                        }
-                    ):Play()
-
-                    TweenService:Create(
-                        circle,
-                        TweenInfo.new(0.2),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(150, 230, 170)
-                        }
-                    ):Play()
-
+                    TweenService:Create(circle, TweenInfo.new(0.2), { Position = UDim2.new(1, -18, 0.5, -8) }):Play()
+                    TweenService:Create(toggleBg, TweenInfo.new(0.2), { BackgroundColor3 = Color3.fromRGB(30, 60, 40) }):Play()
+                    TweenService:Create(circle, TweenInfo.new(0.2), { BackgroundColor3 = Color3.fromRGB(150, 230, 170) }):Play()
                     stroke.Color = Color3.fromRGB(80, 180, 110)
                     label.TextColor3 = Color3.fromRGB(150, 230, 170)
-
                 else
-
-                    TweenService:Create(
-                        circle,
-                        TweenInfo.new(0.2),
-                        {
-                            Position = UDim2.new(0, 2, 0.5, -8)
-                        }
-                    ):Play()
-
-                    TweenService:Create(
-                        toggleBg,
-                        TweenInfo.new(0.2),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(40, 40, 55)
-                        }
-                    ):Play()
-
-                    TweenService:Create(
-                        circle,
-                        TweenInfo.new(0.2),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(230, 220, 200)
-                        }
-                    ):Play()
-
+                    TweenService:Create(circle, TweenInfo.new(0.2), { Position = UDim2.new(0, 2, 0.5, -8) }):Play()
+                    TweenService:Create(toggleBg, TweenInfo.new(0.2), { BackgroundColor3 = Color3.fromRGB(40, 40, 55) }):Play()
+                    TweenService:Create(circle, TweenInfo.new(0.2), { BackgroundColor3 = Color3.fromRGB(230, 220, 200) }):Play()
                     stroke.Color = Color3.fromRGB(50, 50, 70)
                     label.TextColor3 = Color3.fromRGB(200, 200, 220)
                 end
@@ -630,31 +529,18 @@ function Library:CreateWindow(options)
             UpdateToggle()
 
             button.MouseButton1Click:Connect(function()
-
                 toggled = not toggled
-
                 UpdateToggle()
-
-                if callback then
-                    callback(toggled)
-                end
+                if callback then callback(toggled) end
             end)
 
             return {
                 Set = function(_, value)
-
                     toggled = value == true
-
                     UpdateToggle()
-
-                    if callback then
-                        callback(toggled)
-                    end
+                    if callback then callback(toggled) end
                 end,
-
-                Get = function()
-                    return toggled
-                end
+                Get = function() return toggled end
             }
         end
 
@@ -663,21 +549,20 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateSlider(text, min, max, default, callback)
+            elementOrder += 1
 
             min = tonumber(min) or 0
             max = tonumber(max) or 100
             default = tonumber(default) or min
 
-            if max <= min then
-                max = min + 1
-            end
-
+            if max <= min then max = min + 1 end
             default = math.clamp(default, min, max)
 
             local frame = Instance.new("Frame")
             frame.Size = UDim2.new(1, 0, 0, 40)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
+            frame.LayoutOrder = elementOrder
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -738,104 +623,48 @@ function Library:CreateWindow(options)
             local value = default
 
             local function update(inputX)
-
                 local barX = barBg.AbsolutePosition.X
                 local barWidth = barBg.AbsoluteSize.X
+                local newPercent = math.clamp((inputX - barX) / barWidth, 0, 1)
 
-                local newPercent = math.clamp(
-                    (inputX - barX) / barWidth,
-                    0,
-                    1
-                )
-
-                value = math.floor(
-                    min + (max - min) * newPercent
-                )
-
+                value = math.floor(min + (max - min) * newPercent)
                 fill.Size = UDim2.new(newPercent, 0, 1, 0)
-
-                thumb.Position = UDim2.new(
-                    newPercent,
-                    -7,
-                    0.5,
-                    -7
-                )
-
+                thumb.Position = UDim2.new(newPercent, -7, 0.5, -7)
                 label.Text = text .. ": " .. value
 
-                if callback then
-                    callback(value)
-                end
+                if callback then callback(value) end
             end
 
             barBg.InputBegan:Connect(function(input)
-
-                if input.UserInputType == Enum.UserInputType.MouseButton1
-                    or input.UserInputType == Enum.UserInputType.Touch then
-
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     sliderDragging = true
                     update(input.Position.X)
                 end
             end)
 
             UserInputService.InputEnded:Connect(function(input)
-
-                if input.UserInputType == Enum.UserInputType.MouseButton1
-                    or input.UserInputType == Enum.UserInputType.Touch then
-
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     sliderDragging = false
                 end
             end)
 
             UserInputService.InputChanged:Connect(function(input)
-
-                if sliderDragging and (
-                    input.UserInputType == Enum.UserInputType.MouseMovement
-                    or input.UserInputType == Enum.UserInputType.Touch
-                ) then
-
+                if sliderDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                     update(input.Position.X)
                 end
             end)
 
             return {
                 Set = function(_, newValue)
-
-                    newValue = math.clamp(
-                        tonumber(newValue) or min,
-                        min,
-                        max
-                    )
-
+                    newValue = math.clamp(tonumber(newValue) or min, min, max)
                     value = newValue
-
-                    local newPercent =
-                        (value - min) / (max - min)
-
-                    fill.Size = UDim2.new(
-                        newPercent,
-                        0,
-                        1,
-                        0
-                    )
-
-                    thumb.Position = UDim2.new(
-                        newPercent,
-                        -7,
-                        0.5,
-                        -7
-                    )
-
+                    local newPercent = (value - min) / (max - min)
+                    fill.Size = UDim2.new(newPercent, 0, 1, 0)
+                    thumb.Position = UDim2.new(newPercent, -7, 0.5, -7)
                     label.Text = text .. ": " .. value
-
-                    if callback then
-                        callback(value)
-                    end
+                    if callback then callback(value) end
                 end,
-
-                Get = function()
-                    return value
-                end
+                Get = function() return value end
             }
         end
 
@@ -844,6 +673,7 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateDropdown(text, options, callback)
+            elementOrder += 1
 
             options = options or {}
 
@@ -852,6 +682,7 @@ function Library:CreateWindow(options)
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.ClipsDescendants = false
+            frame.LayoutOrder = elementOrder
             frame.Parent = content
 
             local corner = Instance.new("UICorner")
@@ -928,52 +759,23 @@ function Library:CreateWindow(options)
             local isOpen = false
 
             button.MouseButton1Click:Connect(function()
-
                 isOpen = not isOpen
-
                 if isOpen then
-
                     listFrame.Visible = true
-
-                    local targetHeight = math.min(
-                        #options * 24 + 6,
-                        130
-                    )
-
-                    TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, targetHeight)
-                        }
-                    ):Play()
-
+                    local targetHeight = math.min(#options * 24 + 6, 130)
+                    TweenService:Create(listFrame, TweenInfo.new(0.2), { Size = UDim2.new(1, 0, 0, targetHeight) }):Play()
                     arrow.Text = "▲"
-
                 else
-
-                    local tween = TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, 0)
-                        }
-                    )
-
+                    local tween = TweenService:Create(listFrame, TweenInfo.new(0.2), { Size = UDim2.new(1, 0, 0, 0) })
                     tween:Play()
-
                     tween.Completed:Connect(function()
-                        if not isOpen then
-                            listFrame.Visible = false
-                        end
+                        if not isOpen then listFrame.Visible = false end
                     end)
-
                     arrow.Text = "▼"
                 end
             end)
 
             for index, option in pairs(options) do
-
                 local opt = Instance.new("TextButton")
                 opt.Size = UDim2.new(1, 0, 0, 22)
                 opt.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
@@ -991,53 +793,22 @@ function Library:CreateWindow(options)
                 optCorner.Parent = opt
 
                 opt.MouseEnter:Connect(function()
-
-                    TweenService:Create(
-                        opt,
-                        TweenInfo.new(0.15),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-                        }
-                    ):Play()
-
+                    TweenService:Create(opt, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(35, 35, 50) }):Play()
                 end)
 
                 opt.MouseLeave:Connect(function()
-
-                    TweenService:Create(
-                        opt,
-                        TweenInfo.new(0.15),
-                        {
-                            BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-                        }
-                    ):Play()
-
+                    TweenService:Create(opt, TweenInfo.new(0.15), { BackgroundColor3 = Color3.fromRGB(20, 20, 30) }):Play()
                 end)
 
                 opt.MouseButton1Click:Connect(function()
-
                     button.Text = text .. ": " .. tostring(option)
-
-                    local tween = TweenService:Create(
-                        listFrame,
-                        TweenInfo.new(0.2),
-                        {
-                            Size = UDim2.new(1, 0, 0, 0)
-                        }
-                    )
-
+                    local tween = TweenService:Create(listFrame, TweenInfo.new(0.2), { Size = UDim2.new(1, 0, 0, 0) })
                     tween:Play()
-
-                    tween.Completed:Connect(function()
-                        listFrame.Visible = false
-                    end)
-
+                    tween.Completed:Connect(function() listFrame.Visible = false end)
                     arrow.Text = "▼"
                     isOpen = false
 
-                    if callback then
-                        callback(option)
-                    end
+                    if callback then callback(option) end
                 end)
             end
 
@@ -1049,12 +820,13 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateDivider()
+            elementOrder += 1
 
             local Divider = Instance.new("Frame")
             Divider.Size = UDim2.new(1, 0, 0, 1)
             Divider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
             Divider.BorderSizePixel = 0
-            Divider.LayoutOrder = #content:GetChildren()
+            Divider.LayoutOrder = elementOrder
             Divider.Parent = content
 
             return Divider
@@ -1065,12 +837,13 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateParagraph(title, description)
+            elementOrder += 1
 
             local Paragraph = Instance.new("Frame")
             Paragraph.Size = UDim2.new(1, 0, 0, 55)
             Paragraph.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
             Paragraph.BorderSizePixel = 0
-            Paragraph.LayoutOrder = #content:GetChildren()
+            Paragraph.LayoutOrder = elementOrder
             Paragraph.Parent = content
 
             local PCorner = Instance.new("UICorner")
@@ -1108,6 +881,7 @@ function Library:CreateWindow(options)
         --==================================================
 
         function Tab:CreateLabel(text)
+            elementOrder += 1
 
             local Label = Instance.new("TextLabel")
             Label.Size = UDim2.new(1, 0, 0, 22)
@@ -1117,7 +891,7 @@ function Library:CreateWindow(options)
             Label.TextSize = 12
             Label.Font = Enum.Font.GothamSemibold
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.LayoutOrder = #content:GetChildren()
+            Label.LayoutOrder = elementOrder
             Label.Parent = content
 
             return Label
@@ -1145,7 +919,6 @@ function Library:CreateWindow(options)
     NotificationLayout.Parent = NotificationHolder
 
     function Window:Notify(data)
-
         data = data or {}
 
         local Title = data.Title or "SAIF"
@@ -1195,33 +968,23 @@ function Library:CreateWindow(options)
         DescriptionLabel.TextXAlignment = Enum.TextXAlignment.Left
         DescriptionLabel.Parent = Notification
 
-        -- دخول الإشعار
         TweenService:Create(
             Notification,
             TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-            {
-                Size = UDim2.new(0, 300, 0, 70)
-            }
+            { Size = UDim2.new(0, 300, 0, 70) }
         ):Play()
 
-        -- انتظار مدة الإشعار
         task.delay(Duration, function()
-
-            if not Notification or not Notification.Parent then
-                return
-            end
+            if not Notification or not Notification.Parent then return end
 
             local OutTween = TweenService:Create(
                 Notification,
                 TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In),
-                {
-                    Size = UDim2.new(0, 0, 0, 70)
-                }
+                { Size = UDim2.new(0, 0, 0, 70) }
             )
 
             OutTween:Play()
             OutTween.Completed:Wait()
-
             Notification:Destroy()
         end)
     end
@@ -1243,50 +1006,27 @@ function Library:CreateWindow(options)
     local minimizeTween
 
     MinBtn.MouseButton1Click:Connect(function()
-
-        if minimizeTween then
-            minimizeTween:Cancel()
-        end
-
+        if minimizeTween then minimizeTween:Cancel() end
         minimized = not minimized
 
         if minimized then
-
             TabBar.Visible = false
             ContentFrame.Visible = false
 
             minimizeTween = TweenService:Create(
                 MainFrame,
-                TweenInfo.new(
-                    0.3,
-                    Enum.EasingStyle.Quart,
-                    Enum.EasingDirection.Out
-                ),
-                {
-                    Size = UDim2.new(0, 380, 0, 32)
-                }
+                TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+                { Size = UDim2.new(0, 380, 0, 32) }
             )
-
             minimizeTween:Play()
-
         else
-
             minimizeTween = TweenService:Create(
                 MainFrame,
-                TweenInfo.new(
-                    0.3,
-                    Enum.EasingStyle.Quart,
-                    Enum.EasingDirection.Out
-                ),
-                {
-                    Size = originalSize
-                }
+                TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+                { Size = originalSize }
             )
-
             minimizeTween:Play()
-
             minimizeTween.Completed:Connect(function()
-
                 if not minimized then
                     TabBar.Visible = true
                     ContentFrame.Visible = true
@@ -1300,15 +1040,8 @@ function Library:CreateWindow(options)
     --==================================================
 
     function Window:Destroy()
-
-        if ScreenGui then
-            ScreenGui:Destroy()
-        end
+        if ScreenGui then ScreenGui:Destroy() end
     end
-
-    --==================================================
-    -- RETURN
-    --==================================================
 
     return Window
 end
