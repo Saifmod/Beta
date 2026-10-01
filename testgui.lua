@@ -233,7 +233,43 @@ end)
 
 --==================================================  
 -- TABS  
+--==================================================
+
+
+
 --==================================================  
+-- RETURN OBJECT  
+--==================================================  
+
+return {  
+
+    Set = function(_, newCode)  
+
+        code = tostring(newCode or "")  
+        codeBox.Text = code  
+
+    end,  
+
+    Get = function()  
+
+        return code  
+
+    end,  
+
+    Copy = function()  
+
+        CopyCode()  
+
+    end,  
+
+    SetTitle = function(_, newTitle)  
+
+        titleLabel.Text = tostring(newTitle or "Code")  
+
+    end  
+}
+
+end
 
 local Tabs = {}  
 local TabOrder = 0  
@@ -336,176 +372,13 @@ function Window:CreateTab(name)
                 Position = UDim2.new(0, 8, 0, 8)  
             }  
         ):Play()  
-    end)
-
---==================================================
--- CODE BOX
---==================================================
-
-function Tab:CreateCodeBox(title, code)
-
-title = title or "Code"  
-code = tostring(code or "")  
-
-local frame = Instance.new("Frame")  
-frame.Size = UDim2.new(1, 0, 0, 105)  
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)  
-frame.BorderSizePixel = 0  
-frame.LayoutOrder = NextElementOrder()  
-frame.Parent = content  
-
-local corner = Instance.new("UICorner")  
-corner.CornerRadius = UDim.new(0, 7)  
-corner.Parent = frame  
-
-local stroke = Instance.new("UIStroke")  
-stroke.Color = Color3.fromRGB(50, 50, 70)  
-stroke.Thickness = 1  
-stroke.Parent = frame  
-
-local titleLabel = Instance.new("TextLabel")  
-titleLabel.Size = UDim2.new(1, -80, 0, 25)  
-titleLabel.Position = UDim2.new(0, 10, 0, 5)  
-titleLabel.BackgroundTransparency = 1  
-titleLabel.Text = title  
-titleLabel.TextColor3 = Color3.fromRGB(230, 220, 200)  
-titleLabel.Font = Enum.Font.GothamBold  
-titleLabel.TextSize = 11  
-titleLabel.TextXAlignment = Enum.TextXAlignment.Left  
-titleLabel.Parent = frame  
-
-local copyButton = Instance.new("TextButton")  
-copyButton.Size = UDim2.new(0, 55, 0, 23)  
-copyButton.Position = UDim2.new(1, -65, 0, 5)  
-copyButton.BackgroundColor3 = Color3.fromRGB(35, 35, 50)  
-copyButton.BorderSizePixel = 0  
-copyButton.Text = "COPY"  
-copyButton.TextColor3 = Color3.fromRGB(200, 200, 220)  
-copyButton.Font = Enum.Font.GothamBold  
-copyButton.TextSize = 9  
-copyButton.Parent = frame  
-
-local copyCorner = Instance.new("UICorner")  
-copyCorner.CornerRadius = UDim.new(0, 5)  
-copyCorner.Parent = copyButton  
-
-local copyStroke = Instance.new("UIStroke")  
-copyStroke.Color = Color3.fromRGB(50, 50, 70)  
-copyStroke.Thickness = 1  
-copyStroke.Parent = copyButton  
-
-local codeBox = Instance.new("TextBox")  
-codeBox.Size = UDim2.new(1, -20, 0, 65)  
-codeBox.Position = UDim2.new(0, 10, 0, 34)  
-codeBox.BackgroundColor3 = Color3.fromRGB(12, 12, 18)  
-codeBox.BorderSizePixel = 0  
-codeBox.Text = code  
-codeBox.TextColor3 = Color3.fromRGB(190, 190, 210)  
-codeBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)  
-codeBox.Font = Enum.Font.Code  
-codeBox.TextSize = 10  
-codeBox.TextXAlignment = Enum.TextXAlignment.Left  
-codeBox.TextYAlignment = Enum.TextYAlignment.Top  
-codeBox.TextWrapped = false  
-codeBox.MultiLine = true  
-codeBox.ClearTextOnFocus = false  
-codeBox.TextEditable = false  
-codeBox.Parent = frame  
-
-local codeCorner = Instance.new("UICorner")  
-codeCorner.CornerRadius = UDim.new(0, 5)  
-codeCorner.Parent = codeBox  
-
-local codeStroke = Instance.new("UIStroke")  
-codeStroke.Color = Color3.fromRGB(40, 40, 55)  
-codeStroke.Thickness = 1  
-codeStroke.Parent = codeBox  
-
-local function CopyCode()  
-
-    local success = pcall(function()  
-        if setclipboard then  
-            setclipboard(code)  
-        else  
-            error("setclipboard is not supported")  
-        end  
     end)  
 
-    if success then  
+    --==================================================  
+    -- BUTTON  
+    --==================================================  
 
-        copyButton.Text = "COPIED"  
-        copyButton.TextColor3 = Color3.fromRGB(150, 230, 170)  
-
-        TweenService:Create(  
-            copyButton,  
-            TweenInfo.new(0.15),  
-            {  
-                BackgroundColor3 = Color3.fromRGB(30, 60, 40)  
-            }  
-        ):Play()  
-
-        task.delay(1.2, function()  
-
-            if copyButton and copyButton.Parent then  
-
-                copyButton.Text = "COPY"  
-                copyButton.TextColor3 = Color3.fromRGB(200, 200, 220)  
-
-                TweenService:Create(  
-                    copyButton,  
-                    TweenInfo.new(0.15),  
-                    {  
-                        BackgroundColor3 = Color3.fromRGB(35, 35, 50)  
-                    }  
-                ):Play()  
-
-            end  
-        end)  
-
-    else  
-
-        copyButton.Text = "ERROR"  
-        copyButton.TextColor3 = Color3.fromRGB(230, 150, 150)  
-
-        task.delay(1.2, function()  
-
-            if copyButton and copyButton.Parent then  
-                copyButton.Text = "COPY"  
-                copyButton.TextColor3 = Color3.fromRGB(200, 200, 220)  
-            end  
-
-        end)  
-    end  
-end  
-
-copyButton.MouseButton1Click:Connect(CopyCode)  
-
-return {  
-
-    Set = function(_, newCode)  
-        code = tostring(newCode or "")  
-        codeBox.Text = code  
-    end,  
-
-    Get = function()  
-        return code  
-    end,  
-
-    Copy = function()  
-        CopyCode()  
-    end,  
-
-    SetTitle = function(_, newTitle)  
-        titleLabel.Text = tostring(newTitle or "Code")  
-    end  
-}
-
-end
---==================================================
--- BUTTON
---==================================================
-
-function Tab:CreateButton(text, callback)  
+    function Tab:CreateButton(text, callback)  
 
         local frame = Instance.new("Frame")  
         frame.Size = UDim2.new(1, 0, 0, 32)  
