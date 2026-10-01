@@ -346,7 +346,6 @@ function Library:CreateWindow(options)
 
             local frame = Instance.new("Frame")
             frame.Size = UDim2.new(1, 0, 0, 32)
-            frame.LayoutOrder = GetNextOrder()
             frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
@@ -402,108 +401,107 @@ function Library:CreateWindow(options)
         end
         
         --==================================================
--- INPUT BOX
---==================================================
+        -- INPUT BOX
+        --==================================================
 
-function Tab:CreateInput(text, placeholder, callback)
+        function Tab:CreateInput(text, placeholder, callback)
 
-    local Frame = Instance.new("Frame")
-    Frame.Size = UDim2.new(1, 0, 0, 42)
-    Frame.LayoutOrder = GetNextOrder()
-    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    Frame.BorderSizePixel = 0
-    Frame.Parent = content
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, 0, 0, 42)
+            Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+            Frame.BorderSizePixel = 0
+            Frame.Parent = content
 
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
-    Corner.Parent = Frame
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Frame
 
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(50, 50, 70)
-    Stroke.Thickness = 1
-    Stroke.Parent = Frame
+            local Stroke = Instance.new("UIStroke")
+            Stroke.Color = Color3.fromRGB(50, 50, 70)
+            Stroke.Thickness = 1
+            Stroke.Parent = Frame
 
-    local Label = Instance.new("TextLabel")
-    Label.Size = UDim2.new(0.42, 0, 1, 0)
-    Label.Position = UDim2.new(0, 10, 0, 0)
-    Label.BackgroundTransparency = 1
-    Label.Text = text
-    Label.TextColor3 = Color3.fromRGB(200, 200, 220)
-    Label.Font = Enum.Font.GothamBold
-    Label.TextSize = 11
-    Label.TextXAlignment = Enum.TextXAlignment.Left
-    Label.Parent = Frame
+            local Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(0.42, 0, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(200, 200, 220)
+            Label.Font = Enum.Font.GothamBold
+            Label.TextSize = 11
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Parent = Frame
 
-    local TextBox = Instance.new("TextBox")
-    TextBox.Size = UDim2.new(0.48, -10, 0, 26)
-    TextBox.Position = UDim2.new(0.48, 0, 0.5, -13)
-    TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-    TextBox.BorderSizePixel = 0
-    TextBox.Text = ""
-    TextBox.PlaceholderText = placeholder or "اكتب هنا..."
-    TextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
-    TextBox.TextColor3 = Color3.fromRGB(220, 220, 235)
-    TextBox.Font = Enum.Font.Gotham
-    TextBox.TextSize = 10
-    TextBox.ClearTextOnFocus = false
-    TextBox.TextXAlignment = Enum.TextXAlignment.Center
-    TextBox.Parent = Frame
-
-    local BoxCorner = Instance.new("UICorner")
-    BoxCorner.CornerRadius = UDim.new(0, 5)
-    BoxCorner.Parent = TextBox
-
-    local BoxStroke = Instance.new("UIStroke")
-    BoxStroke.Color = Color3.fromRGB(50, 50, 70)
-    BoxStroke.Thickness = 1
-    BoxStroke.Parent = TextBox
-
-    TextBox.Focused:Connect(function()
-        TweenService:Create(
-            TextBox,
-            TweenInfo.new(0.15),
-            {BackgroundColor3 = Color3.fromRGB(35, 35, 50)}
-        ):Play()
-
-        TweenService:Create(
-            BoxStroke,
-            TweenInfo.new(0.15),
-            {Color = Color3.fromRGB(80, 80, 110)}
-        ):Play()
-    end)
-
-    TextBox.FocusLost:Connect(function()
-        TweenService:Create(
-            TextBox,
-            TweenInfo.new(0.15),
-            {BackgroundColor3 = Color3.fromRGB(30, 30, 42)}
-        ):Play()
-
-        TweenService:Create(
-            BoxStroke,
-            TweenInfo.new(0.15),
-            {Color = Color3.fromRGB(50, 50, 70)}
-        ):Play()
-
-        if callback then
-            callback(TextBox.Text)
-        end
-    end)
-
-    return {
-        Set = function(value)
-            TextBox.Text = tostring(value)
-        end,
-
-        Get = function()
-            return TextBox.Text
-        end,
-
-        Clear = function()
+            local TextBox = Instance.new("TextBox")
+            TextBox.Size = UDim2.new(0.48, -10, 0, 26)
+            TextBox.Position = UDim2.new(0.48, 0, 0.5, -13)
+            TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+            TextBox.BorderSizePixel = 0
             TextBox.Text = ""
+            TextBox.PlaceholderText = placeholder or "اكتب هنا..."
+            TextBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
+            TextBox.TextColor3 = Color3.fromRGB(220, 220, 235)
+            TextBox.Font = Enum.Font.Gotham
+            TextBox.TextSize = 10
+            TextBox.ClearTextOnFocus = false
+            TextBox.TextXAlignment = Enum.TextXAlignment.Center
+            TextBox.Parent = Frame
+
+            local BoxCorner = Instance.new("UICorner")
+            BoxCorner.CornerRadius = UDim.new(0, 5)
+            BoxCorner.Parent = TextBox
+
+            local BoxStroke = Instance.new("UIStroke")
+            BoxStroke.Color = Color3.fromRGB(50, 50, 70)
+            BoxStroke.Thickness = 1
+            BoxStroke.Parent = TextBox
+
+            TextBox.Focused:Connect(function()
+                TweenService:Create(
+                    TextBox,
+                    TweenInfo.new(0.15),
+                    {BackgroundColor3 = Color3.fromRGB(35, 35, 50)}
+                ):Play()
+
+                TweenService:Create(
+                    BoxStroke,
+                    TweenInfo.new(0.15),
+                    {Color = Color3.fromRGB(80, 80, 110)}
+                ):Play()
+            end)
+
+            TextBox.FocusLost:Connect(function()
+                TweenService:Create(
+                    TextBox,
+                    TweenInfo.new(0.15),
+                    {BackgroundColor3 = Color3.fromRGB(30, 30, 42)}
+                ):Play()
+
+                TweenService:Create(
+                    BoxStroke,
+                    TweenInfo.new(0.15),
+                    {Color = Color3.fromRGB(50, 50, 70)}
+                ):Play()
+
+                if callback then
+                    callback(TextBox.Text)
+                end
+            end)
+
+            return {
+                Set = function(value)
+                    TextBox.Text = tostring(value)
+                end,
+
+                Get = function()
+                    return TextBox.Text
+                end,
+
+                Clear = function()
+                    TextBox.Text = ""
+                end
+            }
         end
-    }
-end
 
         --==================================================
         -- TOGGLE
@@ -512,9 +510,8 @@ end
         function Tab:CreateToggle(text, default, callback)
 
             local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 0, 32)
-frame.LayoutOrder = GetNextOrder()
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+            frame.Size = UDim2.new(1, 0, 0, 32)
+            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
 
@@ -678,9 +675,8 @@ frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             default = math.clamp(default, min, max)
 
             local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 0, 40)
-frame.LayoutOrder = GetNextOrder()
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+            frame.Size = UDim2.new(1, 0, 0, 40)
+            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             frame.BorderSizePixel = 0
             frame.Parent = content
 
@@ -843,316 +839,210 @@ frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
             }
         end
 
---==================================================
--- DROPDOWN
---==================================================
+        --==================================================
+        -- DROPDOWN
+        --==================================================
 
-function Tab:CreateDropdown(text, options, callback)
+        function Tab:CreateDropdown(text, options, callback)
 
-    options = options or {}
+            options = options or {}
 
-    local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 0, 34)
-frame.LayoutOrder = GetNextOrder()
-frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    frame.BorderSizePixel = 0
-    frame.ClipsDescendants = false
-    frame.Parent = content
+            local frame = Instance.new("Frame")
+            frame.Size = UDim2.new(1, 0, 0, 34)
+            frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+            frame.BorderSizePixel = 0
+            frame.ClipsDescendants = false
+            frame.Parent = content
 
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = frame
+            local corner = Instance.new("UICorner")
+            corner.CornerRadius = UDim.new(0, 6)
+            corner.Parent = frame
 
-    local stroke = Instance.new("UIStroke")
-    stroke.Color = Color3.fromRGB(50, 50, 70)
-    stroke.Thickness = 1
-    stroke.Parent = frame
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.fromRGB(50, 50, 70)
+            stroke.Thickness = 1
+            stroke.Parent = frame
 
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 1, 0)
-    button.BackgroundTransparency = 1
-    button.Text = text
-    button.TextColor3 = Color3.fromRGB(200, 200, 220)
-    button.Font = Enum.Font.GothamBold
-    button.TextSize = 11
-    button.TextXAlignment = Enum.TextXAlignment.Left
-    button.Parent = frame
+            local button = Instance.new("TextButton")
+            button.Size = UDim2.new(1, 0, 1, 0)
+            button.BackgroundTransparency = 1
+            button.Text = text
+            button.TextColor3 = Color3.fromRGB(200, 200, 220)
+            button.Font = Enum.Font.GothamBold
+            button.TextSize = 11
+            button.TextXAlignment = Enum.TextXAlignment.Left
+            button.Parent = frame
 
-    local padding = Instance.new("UIPadding")
-    padding.PaddingLeft = UDim.new(0, 10)
-    padding.PaddingRight = UDim.new(0, 10)
-    padding.Parent = button
+            local padding = Instance.new("UIPadding")
+            padding.PaddingLeft = UDim.new(0, 10)
+            padding.PaddingRight = UDim.new(0, 10)
+            padding.Parent = button
 
-    local arrow = Instance.new("TextLabel")
-    arrow.Size = UDim2.new(0, 20, 1, 0)
-    arrow.Position = UDim2.new(1, -25, 0, 0)
-    arrow.BackgroundTransparency = 1
-    arrow.Text = "▼"
-    arrow.TextColor3 = Color3.fromRGB(150, 150, 170)
-    arrow.Font = Enum.Font.GothamBold
-    arrow.TextSize = 10
-    arrow.Parent = frame
+            local arrow = Instance.new("TextLabel")
+            arrow.Size = UDim2.new(0, 20, 1, 0)
+            arrow.Position = UDim2.new(1, -25, 0, 0)
+            arrow.BackgroundTransparency = 1
+            arrow.Text = "▼"
+            arrow.TextColor3 = Color3.fromRGB(150, 150, 170)
+            arrow.Font = Enum.Font.GothamBold
+            arrow.TextSize = 10
+            arrow.Parent = frame
 
-    local listFrame = Instance.new("Frame")
-    listFrame.Size = UDim2.new(1, 0, 0, 0)
-    listFrame.Position = UDim2.new(0, 0, 1, 4)
-    listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
-    listFrame.BorderSizePixel = 0
-    listFrame.Visible = false
-    listFrame.ClipsDescendants = true
-    listFrame.ZIndex = 10
-    listFrame.Parent = frame
+            local listFrame = Instance.new("Frame")
+            listFrame.Size = UDim2.new(1, 0, 0, 0)
+            listFrame.Position = UDim2.new(0, 0, 1, 4)
+            listFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 22)
+            listFrame.BorderSizePixel = 0
+            listFrame.Visible = false
+            listFrame.ClipsDescendants = true
+            listFrame.ZIndex = 10
+            listFrame.Parent = frame
 
-    local listCorner = Instance.new("UICorner")
-    listCorner.CornerRadius = UDim.new(0, 6)
-    listCorner.Parent = listFrame
+            local listCorner = Instance.new("UICorner")
+            listCorner.CornerRadius = UDim.new(0, 6)
+            listCorner.Parent = listFrame
 
-    local listStroke = Instance.new("UIStroke")
-    listStroke.Color = Color3.fromRGB(50, 50, 70)
-    listStroke.Thickness = 1
-    listStroke.Parent = listFrame
+            local listStroke = Instance.new("UIStroke")
+            listStroke.Color = Color3.fromRGB(50, 50, 70)
+            listStroke.Thickness = 1
+            listStroke.Parent = listFrame
 
-    local scroll = Instance.new("ScrollingFrame")
-    scroll.Size = UDim2.new(1, -6, 1, -6)
-    scroll.Position = UDim2.new(0, 3, 0, 3)
-    scroll.BackgroundTransparency = 1
-    scroll.BorderSizePixel = 0
-    scroll.ScrollBarThickness = 3
-    scroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 110)
-    scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-    scroll.ScrollingDirection = Enum.ScrollingDirection.Y
-    scroll.ZIndex = 11
-    scroll.Parent = listFrame
+            local scroll = Instance.new("ScrollingFrame")
+            scroll.Size = UDim2.new(1, -6, 1, -6)
+            scroll.Position = UDim2.new(0, 3, 0, 3)
+            scroll.BackgroundTransparency = 1
+            scroll.BorderSizePixel = 0
+            scroll.ScrollBarThickness = 3
+            scroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 110)
+            scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+            scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+            scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+            scroll.ZIndex = 11
+            scroll.Parent = listFrame
 
-    local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 2)
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    listLayout.Parent = scroll
+            local listLayout = Instance.new("UIListLayout")
+            listLayout.Padding = UDim.new(0, 2)
+            listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            listLayout.Parent = scroll
 
-    local isOpen = false
+            local isOpen = false
 
-    button.MouseButton1Click:Connect(function()
+            button.MouseButton1Click:Connect(function()
 
-        isOpen = not isOpen
+                isOpen = not isOpen
 
-        if isOpen then
+                if isOpen then
 
-            listFrame.Visible = true
+                    listFrame.Visible = true
 
-            local targetHeight = math.min(
-                #options * 24 + 6,
-                130
-            )
+                    local targetHeight = math.min(
+                        #options * 24 + 6,
+                        130
+                    )
 
-            TweenService:Create(
-                listFrame,
-                TweenInfo.new(0.2),
-                {
-                    Size = UDim2.new(1, 0, 0, targetHeight)
-                }
-            ):Play()
+                    TweenService:Create(
+                        listFrame,
+                        TweenInfo.new(0.2),
+                        {
+                            Size = UDim2.new(1, 0, 0, targetHeight)
+                        }
+                    ):Play()
 
-            arrow.Text = "▲"
+                    arrow.Text = "▲"
 
-        else
+                else
 
-            local tween = TweenService:Create(
-                listFrame,
-                TweenInfo.new(0.2),
-                {
-                    Size = UDim2.new(1, 0, 0, 0)
-                }
-            )
+                    local tween = TweenService:Create(
+                        listFrame,
+                        TweenInfo.new(0.2),
+                        {
+                            Size = UDim2.new(1, 0, 0, 0)
+                        }
+                    )
 
-            tween:Play()
+                    tween:Play()
 
-            tween.Completed:Connect(function()
-                if not isOpen then
-                    listFrame.Visible = false
+                    tween.Completed:Connect(function()
+                        if not isOpen then
+                            listFrame.Visible = false
+                        end
+                    end)
+
+                    arrow.Text = "▼"
                 end
             end)
 
-            arrow.Text = "▼"
-        end
-    end)
+            for index, option in pairs(options) do
 
-    for index, option in pairs(options) do
+                local opt = Instance.new("TextButton")
+                opt.Size = UDim2.new(1, 0, 0, 22)
+                opt.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+                opt.BorderSizePixel = 0
+                opt.Text = tostring(option)
+                opt.TextColor3 = Color3.fromRGB(200, 200, 220)
+                opt.Font = Enum.Font.GothamBold
+                opt.TextSize = 10
+                opt.ZIndex = 12
+                opt.LayoutOrder = index
+                opt.Parent = scroll
 
-        local opt = Instance.new("TextButton")
-        opt.Size = UDim2.new(1, 0, 0, 22)
-        opt.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-        opt.BorderSizePixel = 0
-        opt.Text = tostring(option)
-        opt.TextColor3 = Color3.fromRGB(200, 200, 220)
-        opt.Font = Enum.Font.GothamBold
-        opt.TextSize = 10
-        opt.ZIndex = 12
-        opt.LayoutOrder = index
-        opt.Parent = scroll
+                local optCorner = Instance.new("UICorner")
+                optCorner.CornerRadius = UDim.new(0, 4)
+                optCorner.Parent = opt
 
-        local optCorner = Instance.new("UICorner")
-        optCorner.CornerRadius = UDim.new(0, 4)
-        optCorner.Parent = opt
+                opt.MouseEnter:Connect(function()
 
-        opt.MouseEnter:Connect(function()
+                    TweenService:Create(
+                        opt,
+                        TweenInfo.new(0.15),
+                        {
+                            BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+                        }
+                    ):Play()
 
-            TweenService:Create(
-                opt,
-                TweenInfo.new(0.15),
-                {
-                    BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-                }
-            ):Play()
+                end)
 
-        end)
+                opt.MouseLeave:Connect(function()
 
-        opt.MouseLeave:Connect(function()
+                    TweenService:Create(
+                        opt,
+                        TweenInfo.new(0.15),
+                        {
+                            BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+                        }
+                    ):Play()
 
-            TweenService:Create(
-                opt,
-                TweenInfo.new(0.15),
-                {
-                    BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-                }
-            ):Play()
+                end)
 
-        end)
+                opt.MouseButton1Click:Connect(function()
 
-        opt.MouseButton1Click:Connect(function()
+                    button.Text = text .. ": " .. tostring(option)
 
-            button.Text = text .. ": " .. tostring(option)
+                    local tween = TweenService:Create(
+                        listFrame,
+                        TweenInfo.new(0.2),
+                        {
+                            Size = UDim2.new(1, 0, 0, 0)
+                        }
+                    )
 
-            local tween = TweenService:Create(
-                listFrame,
-                TweenInfo.new(0.2),
-                {
-                    Size = UDim2.new(1, 0, 0, 0)
-                }
-            )
+                    tween:Play()
 
-            tween:Play()
+                    tween.Completed:Connect(function()
+                        listFrame.Visible = false
+                    end)
 
-            tween.Completed:Connect(function()
-                listFrame.Visible = false
-            end)
+                    arrow.Text = "▼"
+                    isOpen = false
 
-            arrow.Text = "▼"
-            isOpen = false
-
-            if callback then
-                callback(option)
+                    if callback then
+                        callback(option)
+                    end
+                end)
             end
-        end)
-    end
 
-    return frame
-end
-
-
---==================================================
--- SAIF NOTIFICATION
---==================================================
-
-local TweenService = game:GetService("TweenService")
-
--- Notification Holder
-local NotificationHolder = Instance.new("Frame")
-NotificationHolder.Name = "NotificationHolder"
-NotificationHolder.Size = UDim2.new(0, 300, 1, -20)
-NotificationHolder.Position = UDim2.new(1, -315, 0, 10)
-NotificationHolder.BackgroundTransparency = 1
-NotificationHolder.Parent = ScreenGui
-
-local NotificationLayout = Instance.new("UIListLayout")
-NotificationLayout.Padding = UDim.new(0, 8)
-NotificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-NotificationLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-NotificationLayout.SortOrder = Enum.SortOrder.LayoutOrder
-NotificationLayout.Parent = NotificationHolder
-
-
-function Window:Notify(data)
-
-    data = data or {}
-
-    local Title = data.Title or "SAIF"
-    local Description = data.Description or ""
-    local Duration = data.Duration or 3
-
-    local Notification = Instance.new("Frame")
-    Notification.Name = "Notification"
-    Notification.Size = UDim2.new(0, 0, 0, 70)
-    Notification.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    Notification.BackgroundTransparency = 0.05
-    Notification.BorderSizePixel = 0
-    Notification.ClipsDescendants = true
-    Notification.LayoutOrder = os.clock()
-    Notification.Parent = NotificationHolder
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Notification
-
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(55, 55, 55)
-    Stroke.Thickness = 1
-    Stroke.Transparency = 0.2
-    Stroke.Parent = Notification
-
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Size = UDim2.new(1, -20, 0, 25)
-    TitleLabel.Position = UDim2.new(0, 10, 0, 7)
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = tostring(Title)
-    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TitleLabel.TextSize = 15
-    TitleLabel.Font = Enum.Font.GothamBold
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    TitleLabel.Parent = Notification
-
-    local DescriptionLabel = Instance.new("TextLabel")
-    DescriptionLabel.Size = UDim2.new(1, -20, 0, 30)
-    DescriptionLabel.Position = UDim2.new(0, 10, 0, 32)
-    DescriptionLabel.BackgroundTransparency = 1
-    DescriptionLabel.Text = tostring(Description)
-    DescriptionLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-    DescriptionLabel.TextSize = 13
-    DescriptionLabel.Font = Enum.Font.Gotham
-    DescriptionLabel.TextWrapped = true
-    DescriptionLabel.TextXAlignment = Enum.TextXAlignment.Left
-    DescriptionLabel.Parent = Notification
-
-    -- دخول الإشعار
-    TweenService:Create(
-        Notification,
-        TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-        {
-            Size = UDim2.new(0, 300, 0, 70)
-        }
-    ):Play()
-
-    -- انتظار مدة الإشعار
-    task.delay(Duration, function()
-
-        if not Notification or not Notification.Parent then
-            return
+            return frame
         end
-
-        local OutTween = TweenService:Create(
-            Notification,
-            TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In),
-            {
-                Size = UDim2.new(0, 0, 0, 70)
-            }
-        )
-
-        OutTween:Play()
-        OutTween.Completed:Wait()
-
-        Notification:Destroy()
-    end)
-end
 
         --==================================================
         -- DIVIDER
@@ -1164,7 +1054,7 @@ end
             Divider.Size = UDim2.new(1, 0, 0, 1)
             Divider.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
             Divider.BorderSizePixel = 0
-            Divider.LayoutOrder = GetNextOrder()
+            Divider.LayoutOrder = #content:GetChildren()
             Divider.Parent = content
 
             return Divider
@@ -1180,7 +1070,7 @@ end
             Paragraph.Size = UDim2.new(1, 0, 0, 55)
             Paragraph.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
             Paragraph.BorderSizePixel = 0
-            Paragraph.LayoutOrder = GetNextOrder()
+            Paragraph.LayoutOrder = #content:GetChildren()
             Paragraph.Parent = content
 
             local PCorner = Instance.new("UICorner")
@@ -1227,13 +1117,113 @@ end
             Label.TextSize = 12
             Label.Font = Enum.Font.GothamSemibold
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.LayoutOrder = GetNextOrder()
+            Label.LayoutOrder = #content:GetChildren()
             Label.Parent = content
 
             return Label
         end
 
         return Tab
+    end
+
+    --==================================================
+    -- SAIF NOTIFICATION
+    --==================================================
+
+    local NotificationHolder = Instance.new("Frame")
+    NotificationHolder.Name = "NotificationHolder"
+    NotificationHolder.Size = UDim2.new(0, 300, 1, -20)
+    NotificationHolder.Position = UDim2.new(1, -315, 0, 10)
+    NotificationHolder.BackgroundTransparency = 1
+    NotificationHolder.Parent = ScreenGui
+
+    local NotificationLayout = Instance.new("UIListLayout")
+    NotificationLayout.Padding = UDim.new(0, 8)
+    NotificationLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    NotificationLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+    NotificationLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    NotificationLayout.Parent = NotificationHolder
+
+    function Window:Notify(data)
+
+        data = data or {}
+
+        local Title = data.Title or "SAIF"
+        local Description = data.Description or ""
+        local Duration = data.Duration or 3
+
+        local Notification = Instance.new("Frame")
+        Notification.Name = "Notification"
+        Notification.Size = UDim2.new(0, 0, 0, 70)
+        Notification.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        Notification.BackgroundTransparency = 0.05
+        Notification.BorderSizePixel = 0
+        Notification.ClipsDescendants = true
+        Notification.LayoutOrder = os.clock()
+        Notification.Parent = NotificationHolder
+
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 8)
+        Corner.Parent = Notification
+
+        local Stroke = Instance.new("UIStroke")
+        Stroke.Color = Color3.fromRGB(55, 55, 55)
+        Stroke.Thickness = 1
+        Stroke.Transparency = 0.2
+        Stroke.Parent = Notification
+
+        local TitleLabel = Instance.new("TextLabel")
+        TitleLabel.Size = UDim2.new(1, -20, 0, 25)
+        TitleLabel.Position = UDim2.new(0, 10, 0, 7)
+        TitleLabel.BackgroundTransparency = 1
+        TitleLabel.Text = tostring(Title)
+        TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TitleLabel.TextSize = 15
+        TitleLabel.Font = Enum.Font.GothamBold
+        TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TitleLabel.Parent = Notification
+
+        local DescriptionLabel = Instance.new("TextLabel")
+        DescriptionLabel.Size = UDim2.new(1, -20, 0, 30)
+        DescriptionLabel.Position = UDim2.new(0, 10, 0, 32)
+        DescriptionLabel.BackgroundTransparency = 1
+        DescriptionLabel.Text = tostring(Description)
+        DescriptionLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+        DescriptionLabel.TextSize = 13
+        DescriptionLabel.Font = Enum.Font.Gotham
+        DescriptionLabel.TextWrapped = true
+        DescriptionLabel.TextXAlignment = Enum.TextXAlignment.Left
+        DescriptionLabel.Parent = Notification
+
+        -- دخول الإشعار
+        TweenService:Create(
+            Notification,
+            TweenInfo.new(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+            {
+                Size = UDim2.new(0, 300, 0, 70)
+            }
+        ):Play()
+
+        -- انتظار مدة الإشعار
+        task.delay(Duration, function()
+
+            if not Notification or not Notification.Parent then
+                return
+            end
+
+            local OutTween = TweenService:Create(
+                Notification,
+                TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.In),
+                {
+                    Size = UDim2.new(0, 0, 0, 70)
+                }
+            )
+
+            OutTween:Play()
+            OutTween.Completed:Wait()
+
+            Notification:Destroy()
+        end)
     end
 
     --==================================================
