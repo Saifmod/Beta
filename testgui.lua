@@ -244,12 +244,6 @@ function Library:CreateWindow(options)
         TabOrder += 1
 
         local Tab = {}
-        local ElementOrder = 0
-
-local function GetNextOrder()
-    ElementOrder += 1
-    return ElementOrder
-end
 
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 30)
