@@ -848,7 +848,7 @@ function Tab:CreateDropdown(text, options, callback)
     options = options or {}
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 0, 32)
+    frame.Size = UDim2.new(1, 0, 0, 34)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
     frame.BorderSizePixel = 0
     frame.ClipsDescendants = false
@@ -863,16 +863,20 @@ function Tab:CreateDropdown(text, options, callback)
     stroke.Thickness = 1
     stroke.Parent = frame
 
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, -30, 1, 0)
-    label.Position = UDim2.new(0, 10, 0, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = Color3.fromRGB(200, 200, 220)
-    label.Font = Enum.Font.GothamBold
-    label.TextSize = 11
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = frame
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, 0, 1, 0)
+    button.BackgroundTransparency = 1
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(200, 200, 220)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 11
+    button.TextXAlignment = Enum.TextXAlignment.Left
+    button.Parent = frame
+
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 10)
+    padding.PaddingRight = UDim.new(0, 10)
+    padding.Parent = button
 
     local arrow = Instance.new("TextLabel")
     arrow.Size = UDim2.new(0, 20, 1, 0)
@@ -923,13 +927,6 @@ function Tab:CreateDropdown(text, options, callback)
 
     local isOpen = false
 
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 1, 0)
-    button.BackgroundTransparency = 1
-    button.Text = ""
-    button.ZIndex = 5
-    button.Parent = frame
-
     button.MouseButton1Click:Connect(function()
 
         isOpen = not isOpen
@@ -940,36 +937,8 @@ function Tab:CreateDropdown(text, options, callback)
 
             local targetHeight = math.min(
                 #options * 24 + 6,
-                150
+                130
             )
-
-            task.defer(function()
-
-                local frameBottom =
-                    frame.AbsolutePosition.Y + frame.AbsoluteSize.Y
-
-                local viewportBottom =
-                    content.AbsolutePosition.Y + content.AbsoluteSize.Y
-
-                local needed =
-                    frameBottom + targetHeight + 10 - viewportBottom
-
-                if needed > 0 then
-
-                    local maxCanvasY = math.max(
-                        0,
-                        content.AbsoluteCanvasSize.Y - content.AbsoluteSize.Y
-                    )
-
-                    content.CanvasPosition = Vector2.new(
-                        content.CanvasPosition.X,
-                        math.min(
-                            content.CanvasPosition.Y + needed,
-                            maxCanvasY
-                        )
-                    )
-                end
-            end)
 
             TweenService:Create(
                 listFrame,
@@ -1001,12 +970,7 @@ function Tab:CreateDropdown(text, options, callback)
 
             arrow.Text = "▼"
         end
-
-    end) -- هذا الـend كان ناقص
-
-    --==================================================
-    -- DROPDOWN OPTIONS
-    --==================================================
+    end)
 
     for index, option in pairs(options) do
 
@@ -1052,7 +1016,7 @@ function Tab:CreateDropdown(text, options, callback)
 
         opt.MouseButton1Click:Connect(function()
 
-            label.Text = text .. ": " .. tostring(option)
+            button.Text = text .. ": " .. tostring(option)
 
             local tween = TweenService:Create(
                 listFrame,
@@ -1065,11 +1029,7 @@ function Tab:CreateDropdown(text, options, callback)
             tween:Play()
 
             tween.Completed:Connect(function()
-
-                if not isOpen then
-                    listFrame.Visible = false
-                end
-
+                listFrame.Visible = false
             end)
 
             arrow.Text = "▼"
@@ -1078,7 +1038,6 @@ function Tab:CreateDropdown(text, options, callback)
             if callback then
                 callback(option)
             end
-
         end)
     end
 
