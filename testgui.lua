@@ -1231,118 +1231,74 @@ end
         return Tab
     end
 
---==================================================
--- CLOSE CONFIRMATION
---==================================================
+    --==================================================
+    -- CLOSE
+    --==================================================
 
-local CloseDialogOpen = false
-
-local function ShowCloseDialog()
-
-    -- منع فتح أكثر من واجهة
-    if CloseDialogOpen then
-        return
-    end
-
-    CloseDialogOpen = true
-
-    local Dialog = Instance.new("Frame")
-    Dialog.Name = "CloseDialog"
-    Dialog.Size = UDim2.new(0, 300, 0, 160)
-    Dialog.Position = UDim2.new(0.5, -150, 0.5, -80)
-    Dialog.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    Dialog.BorderSizePixel = 0
-    Dialog.ZIndex = 100
-    Dialog.Parent = ScreenGui
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 10)
-    Corner.Parent = Dialog
-
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = Color3.fromRGB(55, 55, 55)
-    Stroke.Thickness = 1
-    Stroke.Parent = Dialog
-
-    -- العنوان
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, -20, 0, 30)
-    Title.Position = UDim2.new(0, 10, 0, 12)
-    Title.BackgroundTransparency = 1
-    Title.Text = "إغلاق السكربت"
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextSize = 17
-    Title.Font = Enum.Font.GothamBold
-    Title.TextXAlignment = Enum.TextXAlignment.Center
-    Title.ZIndex = 101
-    Title.Parent = Dialog
-
-    -- الوصف
-    local Description = Instance.new("TextLabel")
-    Description.Size = UDim2.new(1, -30, 0, 35)
-    Description.Position = UDim2.new(0, 15, 0, 48)
-    Description.BackgroundTransparency = 1
-    Description.Text = "هل تريد إغلاق السكربت؟"
-    Description.TextColor3 = Color3.fromRGB(180, 180, 180)
-    Description.TextSize = 14
-    Description.Font = Enum.Font.Gotham
-    Description.TextXAlignment = Enum.TextXAlignment.Center
-    Description.ZIndex = 101
-    Description.Parent = Dialog
-
-    -- نعم
-    local Yes = Instance.new("TextButton")
-    Yes.Size = UDim2.new(0.42, 0, 0, 35)
-    Yes.Position = UDim2.new(0.06, 0, 1, -47)
-    Yes.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    Yes.BorderSizePixel = 0
-    Yes.Text = "نعم"
-    Yes.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Yes.TextSize = 14
-    Yes.Font = Enum.Font.GothamMedium
-    Yes.ZIndex = 101
-    Yes.Parent = Dialog
-
-    local YesCorner = Instance.new("UICorner")
-    YesCorner.CornerRadius = UDim.new(0, 7)
-    YesCorner.Parent = Yes
-
-    -- لا
-    local No = Instance.new("TextButton")
-    No.Size = UDim2.new(0.42, 0, 0, 35)
-    No.Position = UDim2.new(0.52, 0, 1, -47)
-    No.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    No.BorderSizePixel = 0
-    No.Text = "لا"
-    No.TextColor3 = Color3.fromRGB(255, 255, 255)
-    No.TextSize = 14
-    No.Font = Enum.Font.GothamMedium
-    No.ZIndex = 101
-    No.Parent = Dialog
-
-    local NoCorner = Instance.new("UICorner")
-    NoCorner.CornerRadius = UDim.new(0, 7)
-    NoCorner.Parent = No
-
-    -- نعم
-    Yes.MouseButton1Click:Connect(function()
+    CloseBtn.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
 
-    -- لا
-    No.MouseButton1Click:Connect(function()
-        Dialog:Destroy()
-        CloseDialogOpen = false
+    --==================================================
+    -- MINIMIZE
+    --==================================================
+
+    local minimized = false
+    local originalSize = MainFrame.Size
+    local minimizeTween
+
+    MinBtn.MouseButton1Click:Connect(function()
+
+        if minimizeTween then
+            minimizeTween:Cancel()
+        end
+
+        minimized = not minimized
+
+        if minimized then
+
+            TabBar.Visible = false
+            ContentFrame.Visible = false
+
+            minimizeTween = TweenService:Create(
+                MainFrame,
+                TweenInfo.new(
+                    0.3,
+                    Enum.EasingStyle.Quart,
+                    Enum.EasingDirection.Out
+                ),
+                {
+                    Size = UDim2.new(0, 380, 0, 32)
+                }
+            )
+
+            minimizeTween:Play()
+
+        else
+
+            minimizeTween = TweenService:Create(
+                MainFrame,
+                TweenInfo.new(
+                    0.3,
+                    Enum.EasingStyle.Quart,
+                    Enum.EasingDirection.Out
+                ),
+                {
+                    Size = originalSize
+                }
+            )
+
+            minimizeTween:Play()
+
+            minimizeTween.Completed:Connect(function()
+
+                if not minimized then
+                    TabBar.Visible = true
+                    ContentFrame.Visible = true
+                end
+            end)
+        end
     end)
-end
-
---==================================================
--- CLOSE BUTTON
---==================================================
-
-CloseBtn.MouseButton1Click:Connect(function()
-    ShowCloseDialog()
-end)
 
     --==================================================
     -- DESTROY
